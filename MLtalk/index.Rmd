@@ -10,7 +10,6 @@ output:
     highlight: espresso
     center: true
     transition: convex
-    self_contained: true
     lib_dir: libs
     reveal_options:
       slideNumber: true
