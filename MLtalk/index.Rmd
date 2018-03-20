@@ -10,8 +10,7 @@ output:
     highlight: espresso
     center: true
     transition: convex
-    mathjax: local
-    self_contained: false
+    self_contained: true
     lib_dir: libs
     reveal_options:
       slideNumber: true
