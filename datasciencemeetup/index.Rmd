@@ -1,0 +1,421 @@
+---
+output:
+  revealjs::revealjs_presentation:
+    incremental: false
+    theme: league
+    highlight: espresso
+    center: true
+    smart: true
+    transition: fade
+    mathjax: null
+    reveal_options:
+      slideNumber: true
+    fig_caption: true
+    css: stylesheet.css
+---
+
+## Machine learning for particle physics using R {data-background="04100th.gif"}
+
+Andrew John Lowe
+
+*Wigner Research Centre for Physics,<br>Hungarian Academy of Sciences*
+
+<style>
+.reveal {
+font-size: 2em;
+}
+.reveal h1,
+.reveal h2 {
+font-family: "Quicksand", sans-serif;
+font-weight: 900;
+font-size: 175%;
+letter-spacing: -0.08em;
+text-transform: uppercase;
+text-shadow: true; }
+.reveal h5 {
+color: black;
+-webkit-transform: translate(0%, -800%);
+-moz-transform: translate(0%, -800%);   
+-o-transform: translate(0%, -800%);
+-ms-transform: translate(0%, -800%);
+transform: translate(0%, -800%);
+}
+.white figure img {
+background: white;
+}
+html.blur .backgrounds {
+-webkit-filter: blur(4px) saturate(.5) brightness(.6);
+-moz-filter: blur(4px) saturate(.5) brightness(.6);
+-o-filter: blur(4px) saturate(.5) brightness(.6);
+-ms-filter: blur(4px) saturate(.5) brightness(.6);
+filter: blur(4px) saturate(.5) brightness(.6);
+}
+html.dim .backgrounds {
+-webkit-filter: saturate(.5) brightness(.6);
+-moz-filter: saturate(.5) brightness(.6);
+-o-filter: saturate(.5) brightness(.6);
+-ms-filter: saturate(.5) brightness(.6);
+filter: saturate(.5) brightness(.6);
+}
+@-webkit-keyframes blur-animation {
+0% {
+-webkit-filter: blur(0px) ;
+-moz-filter: blur(0px);
+-o-filter: blur(0px);
+-ms-filter: blur(0px);
+filter: blur(0px);
+
+}
+100% {
+-webkit-filter: blur(4px) saturate(.5) brightness(.66);
+-moz-filter: blur(4px) saturate(.5) brightness(.66);
+-o-filter: blur(4px) saturate(.5) brightness(.66);
+-ms-filter: blur(4px) saturate(.5) brightness(.66);
+filter: blur(4px) saturate(.5) brightness(.66);
+
+}
+}
+@-webkit-keyframes dim-animation {
+0% {
+-webkit-filter: blur(0px) ;
+-moz-filter: blur(0px);
+-o-filter: blur(0px);
+-ms-filter: blur(0px);
+filter: blur(0px);
+
+}
+100% {
+-webkit-filter: blur(0px) saturate(.5) brightness(.4);
+-moz-filter: blur(0px) saturate(.5) brightness(.4);
+-o-filter: blur(0px) saturate(.5) brightness(.4);
+-ms-filter: blur(0px) saturate(.5) brightness(.4);
+filter: blur(0px) saturate(.5) brightness(.4);
+
+}
+}
+html.background-blur-animation .backgrounds {
+-webkit-animation-name: blur-animation;
+-webkit-animation-duration: 1s;
+-webkit-animation-iteration-count: 1;
+-webkit-animation-direction: alternate;
+-webkit-animation-timing-function: ease-out;
+-webkit-animation-fill-mode: forwards;
+-webkit-animation-delay: 0s;
+}
+html.background-dim-animation .backgrounds {
+-webkit-animation-name: dim-animation;
+-webkit-animation-duration: 1s;
+-webkit-animation-iteration-count: 1;
+-webkit-animation-direction: alternate;
+-webkit-animation-timing-function: ease-out;
+-webkit-animation-fill-mode: forwards;
+-webkit-animation-delay: 0s;
+}
+#sidebar {
+-webkit-transform: rotate(270deg) translate(0px, -500px);
+-moz-transform: rotate(270deg) translate(0px, -500px);   
+-o-transform: rotate(270deg) translate(0px, -500px);
+-ms-transform: rotate(270deg) translate(0px, -500px);
+transform: rotate(270deg) translate(0px, -500px);
+}
+.emphasized {
+color: gray;
+font-size: 5em;
+}
+.col2 {
+columns: 2 200px;         /* number of columns and width in pixels*/
+-webkit-columns: 2 200px; /* chrome, safari */
+-moz-columns: 2 200px;    /* firefox */
+-o-columns: 2 200px;
+-ms-columns: 2 200px;
+}
+.big {
+font-size: 15.0em;
+}
+</style>
+
+## Introduction: about this talk {data-background="particle-collide.png" data-state="background-dim-animation"}
+
+* I'm a particle physicist, programmer, and aspiring data scientist
+      * Worked for 10 years on the development of core software and algorithms for a multi-stage cascade classifier that processes massive data in real-time (60 TB/s)
+      * Previously a member of team that discovered the Higgs boson
+      * I now work on using advanced machine learning techniques to develop classification algorithms for recognising subatomic particles based on their decay properties
+* I'm going to talk about how switching to **R** has made it easier for me to ask more complex questions from my data than I would have been able to otherwise
+
+## {data-background="sm-animated.gif"}
+
+## What is particle physics? {data-background="sm-animated.gif" data-state="background-dim-animation"}
+
+- The study of subatomic particles and the fundamental forces that act between them
+- Present-day particle physics research represents man's most ambitious
+and organised effort to answer the question: *What is the universe made of?*
+- We have an extremely successful model that was developed throughout the mid to late 20th century
+- But many questions still remain unanswered
+    * Doesn't explain: gravity, identity of dark matter, neutrino oscillations, matter/antimatter asymmetry of universe...
+- To probe these mysteries, we built the **Large Hadron Collider**
+
+
+## The Large Hadron Collider {data-background="ring.jpg"}
+#### a $10 billion factory for producing massive amounts of physics data (30&nbsp;PB/year)</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+
+## {data-background="lhc-anim.gif"}
+
+## Is Hadoop used for processing the 30 PB/year of physics data?
+
+<div class="col2">
+* No (Sorry Tom!)
+* Experimental data are mainly stored on tape
+* CERN uses Hadoop for storing the **metadata** of the experimental data
+* Big-data applications in use by the CERN IT department include *Spark, Sqoop, Impala, HBase, Hive and Pig*
+
+![](dont-be-sad.png)
+</div>
+
+
+## LHC data flow {data-background="cern-servers.jpg" data-state="background-dim-animation"}
+1. Detected by LHC experiment
+2. Online multi-level filtering (hardware and software)
+3. Transferred to Worldwide Computing Grid, processed in stages:
+    * Tier-0: CERN (Geneva) and Wigner RCP (Budapest)
+    * Tier-1: about a dozen large data centres located worldwide
+    * Tier-2: institute and university clusters
+4. Users run large analysis jobs on the Grid
+5. Data written to locally-analysable files, put on PCs
+6. Turned into plot in a paper
+
+
+
+
+## {data-background="cms-root.png" data-state="background-dim"}
+![](root6-banner.png)
+
+- For experimental particle physics, [ROOT](http:://root.cern.ch) is the ubiquitous data analysis tool, and has been for the last 20 years
+- Command language: CINT/CLANG ("interpreted C++") or Python
+    * Small data: work interactively or run macros
+    * Big data: compile with ROOT libraries, run on Grid
+- Data format optimised for large data sets
+- Complex algorithms are difficult to do interactively
+- End up writing huge C++ programs; endless edit-compile-run loops
+- A 100% non-transferable skill
+<br>
+
+## Why did I choose R? {data-background="Rlogo.png" data-state="background-blur-animation"}
+
+- Chief among those were the need for fast prototyping and high-level abstractions that let me concentrate on what I wanted to achieve, rather than on the mechanics and the highly-granular details of the implementation
+    * Can do more with less typing
+    * Incredibly easy to express what I want to achieve
+- Exponentially-growing number of add-on packages
+- Latest machine learning algorithms are available
+- Great community; about 2 million R users worldwide
+    * Technical questions are answered extremely quickly
+- Beautiful plots that require very little tweaking for publication
+- Pleasant user experience ☺
+
+
+## My analysis: {data-background="jets.png" data-state="background-blur-animation"}
+### Identify particles based on their decay products
+
+* Particles called **quarks** and **gluons** are produced copiously in proton-proton collisions at the LHC
+* Quarks and gluons are not observed individually
+* Instead, we can only measure their decay products
+* What we observe is a cone-shaped spray of particles called a *jet*
+* The measured particles are *clustered* by a jet algorithm (somewhat similar to *k-means*), and the resultant jets are viewed as a proxy to the initial quarks and gluons that we can't measure
+* Jets are a common feature in high-energy particle collisions
+
+##  {data-background="jets-dim.png"}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+When two high-energy protons collide, the quarks and gluons that compose them (here only quarks are depicted in green, red, and blue) can hit each other. Some of these quarks and gluons (pink balls) can fly away and "hadronize", forming directional jets of energetic particles (white balls)
+
+## {data-background="ttbar.gif"}
+
+## {data-background="cms-sixjets.png"}
+
+## The problem in a nutshell {data-background="gg-run177878-evt188723900-3d-nologo.jpg" data-state="background-dim-animation"}
+
+- Beams of energetic protons collide inside our detector
+- Quarks and gluons emerge and decay into sprays of particles
+- Algorithms cluster these decay products into jets
+- For each jet, we'd like to know what initiated it
+- Was it a quark or a gluon?
+- Being able to accurately discriminate between quark- and gluon-initiated jets would be an extremely powerful tool in the search for new particles and new physics
+- This is an archetypal classification problem that might be amenable to machine learning
+
+
+## Machine learning &<br> particle physics {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Machine learning is more or less what is commonly known in particle physics as multivariate analysis (MVA)
+* Used for many years but faced widespread scepticism
+* Use of multivariate pattern recognition algorithms was basically taboo in new particle searches until recently
+* Much prejudice against using what were considered "black box" selection algorithms
+* Artificial neural networks and Fisher discriminants (linear discriminant analysis) were used somewhat in the 1990's
+* Boosted Decision Tree (AdaBoost, 1996) is the favourite algorithm used for many analyses (1st use: 2004)
+<br>
+
+<!---
+<small>[Successes, Challenges and Future Outlook of Multivariate Analysis In HEP](http://iopscience.iop.org/article/10.1088/1742-6596/608/1/012058/meta), Helge Voss, 2015 J. Phys.: Conf. Ser. 608 (2015) 012058; [Higgs Machine Learning Challenge visits CERN](http://indico.cern.ch/event/382895/), 19 May 2015, CERN; [Boosted Decision Trees as an Alternative to Artificial Neural Networks for Particle Identification](http://arxiv.org/abs/physics/0408124), Hai-Jun Yang *et al.*, Nucl.Instrum.Meth. A543 (2005) 577-584</small>
+--->
+
+
+## Data production pipeline {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Use experiment's software to process Monte Carlo simulated data that contains lots of jets
+    - Insert my own C++ code with engineered features
+* Attach ground-truth class labels ("quark"/"gluon") to each jet
+    - Significant class noise (mislabelled jets) at the 5--10% level
+    - Procedure sometimes fails to assign class (missing labels)
+* Write-out data and convert for use in R using **RootTreeToR**
+
+
+## Cleaning data in R {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* **data.table** is extremely useful here:
+    - **fread** found to be at least twice as fast as other methods I tried
+    - Helps me filter my data and is super-fast, especially using keys:
+  
+```{r eval = FALSE}
+setkey(DT, numTracks) # Set number of particle tracks to be the key
+DT <- DT[!.(1)] # Remove all single-track jets
+DT[, (bad.cols) := NULL] # Remove junk columns
+```
+
+* **dplyr** was invaluable for data analysis *dematryoshkafication*
+    - Unwrap nested function calls using the %>% pipe operator
+    - Data manipulation with dplyr mirrors the way we think about processing data: like on a production line, performing actions on an object sequentially, in a stepwise manner
+    - Enables complex tasks to be constructed from simpler components
+
+
+## More data munging {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* To give me some extra space in RAM to work I used **SOAR** (stored object caches for R):
+
+```{r eval = FALSE}
+Sys.setenv(R_LOCAL_CACHE = "soar_cache")
+Store(DT) # data.table now stored as RData file on disk and out of RAM
+```
+
+* **caret** also provides some useful data-munging; I could reduce the size of my data by more than 50% with a conservative cut on correlations between features:
+
+```{r eval = FALSE}
+highly.correlated <- findCorrelation(
+  cor(DT[,-ncol(DT), with = FALSE], method = "pearson"),
+  cutoff = 0.95, names = TRUE)
+```
+
+* Removing duplicate and highly-correlated features was critical for enabling my data to fit in RAM
+
+## Data exploration {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Missingness and floating-point types
+* Variation in magnitude
+* Correlations and partial correlations
+
+## {data-background="missingness-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="heatmap-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="correlogram-top-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="qgraph-pearson-cor-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="qgraph-pearson-glasso-cut-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Dimensionality reduction {data-background="neural.jpg" data-state="background-dim-animation"}
+
+If we use linear or non-linear dimensionality reduction techniques to project the data into 2D, do we see any evidence for two distinct statistical populations of jets?
+
+* Principal component analysis (PCA)
+* t-Distributed Stochastic Neighbour Embedding (t-SNE)
+* Deep learning autoencoder
+
+## {data-background="biplot-poly-cloud-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="tSNE-poly-cloud-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="plot-autoenc-whitened-poly-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Dimensionality reduction: conclusions {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- No convincing evidence to support a hypothesis that quark- and gluon-initiated jets form two distinct populations
+- The features are probably not informative enough
+- There may be some easy cases from which we can produce a purified sample of quark-initiated jets, which would be useful for new particle searches
+
+
+## Fast feature selection {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* We want to find the variables that best explain the differences in physics between quark-jets and gluon-jets
+* Typical methods for feature selection too slow
+* Ranked features using an entropy-based method from **CORElearn**
+* Filter-based method that involves ranking by *information gain* (Kullback–Leibler divergence)
+    - Information gain is based on the concept of entropy from information theory and is commonly used to decide which features to use when growing a decision tree
+* To test method: inject random probes into the data, repeatedly calculate information gain for a large number of bootstrap resamplings, obtain means and confidence interval estimates
+
+## {data-background="plot-infogain-topXpc-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Removing redundant features using mutual information {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- Information gain does not separate redundant features
+- To filter redundant features, I used *mutual information*
+    * In information theory, the mutual information (MI) of two random variables is a measure of their mutual dependence
+    * Quantifies the "amount of information" obtained about one random variable, through the other random variable
+    * Used *symmetric uncertainty*, a normalized variant that we can treat like a correlation
+    
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+
+```{r mutinfo, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=4, fig.cap="<small>Venn diagram for various information measures associated with correlated variables X and Y. The area contained by both circles is the joint entropy H(X,Y). The circle on the left (red and violet) is the individual *Shannon entropy* H(X). The circle on the right (blue and violet) is H(Y). The violet is the **mutual information** I(X;Y).</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("mutinfo.png")
+grid.raster(img)
+```
+
+## {data-background="qgraph-mutual-information-cor-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Feature redundancy {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* We'd like to pick features that have a strong association with the target ("quark"/"gluon") but have weak association with each other
+
+```{r venn, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=4, fig.cap="<small>If Z is the target, for each X and Y measure the total *conditional mutual information* corresponding to the cyan and magenta regions. If the sum is large (and the grey region is small) then this is a good pairing.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("venn.png")
+grid.raster(img)
+```
+
+## {data-background="qgraph-condinfosum-cor-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="qgraph-condinfosum-cor-threshold-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Results {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* High degree of correlation between features, but some groups of features exist that are minimally correlated with each other
+* Correlations between features that might hint at common sensitivity to underlying physics
+* Probably a simple linear classifier might provide performance as good as we can get with this data
+* New features have been found that were hitherto unknown, and these show promise in helping us understand the physics involved in the quark and gluon decay process
+
+## Summary {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- First-ever particle physics data analysis performed entirely in R
+- Devised fast selection method that has found new discriminant variables that promise to improve discovery reach in searches for new particles at CERN and beyond
+- Pioneered implementation of reproducible research by writing the first-ever fully reproducible and repurposable particle physics analysis paper using R Markdown
+- R has enabled me to do far more than I could have achieved using only the standard tools available to particle physicists
+
+
+## Thanks! {data-background="pomi.jpg"}
+
+> [https://www.linkedin.com/in/andrewjohnlowe](https://www.linkedin.com/in/andrewjohnlowe)
+
+## {data-background="data-centre-2016-12-01.png"}
+

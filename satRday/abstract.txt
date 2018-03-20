@@ -1,0 +1,5 @@
+Andrew Lowe
+Scientific Research Fellow at
+Wigner Research Centre for Physics (HUN)
+Andrew Lowe
+Andrew Lowe is a particle physicist at the Wigner Research Centre for Physics, Hungarian Academy of Sciences, in Budapest. He spent several years based at the European Organization for Nuclear Research (CERN) in Geneva and was a member of the collaboration that discovered the Higgs boson. He played a major role in the development of the core software and algorithms for a real-time multi-stage cascade classifier that filters and reduces the collision event data rate from 60 TB/s to a manageable 300 MB/s that can be written to permanent storage for subsequent offline analysis. He now works on using machine learning techniques to develop classification algorithms for recognising particles based on their decay properties.

@@ -1,0 +1,344 @@
+---
+output:
+  revealjs::revealjs_presentation:
+    incremental: false
+    theme: league
+    highlight: espresso
+    center: true
+    smart: true
+    transition: fade
+    mathjax: null
+    reveal_options:
+      slideNumber: true
+    fig_caption: true
+    css: stylesheet.css
+---
+
+## Quark/gluon tagging for ALICE:<br>Machine learning for particle physics using R {data-background="04100th.gif"}
+
+Andrew John Lowe
+
+*Wigner Research Centre for Physics,<br>Hungarian Academy of Sciences*
+
+<style>
+.reveal {
+font-size: 2em;
+}
+.reveal h1,
+.reveal h2 {
+font-family: "Quicksand", sans-serif;
+font-weight: 900;
+font-size: 175%;
+letter-spacing: -0.08em;
+text-transform: uppercase;
+text-shadow: true; }
+.reveal h5 {
+color: black;
+-webkit-transform: translate(0%, -800%);
+-moz-transform: translate(0%, -800%);   
+-o-transform: translate(0%, -800%);
+-ms-transform: translate(0%, -800%);
+transform: translate(0%, -800%);
+}
+.white figure img {
+background: white;
+}
+html.blur .backgrounds {
+-webkit-filter: blur(4px) saturate(.5) brightness(.6);
+-moz-filter: blur(4px) saturate(.5) brightness(.6);
+-o-filter: blur(4px) saturate(.5) brightness(.6);
+-ms-filter: blur(4px) saturate(.5) brightness(.6);
+filter: blur(4px) saturate(.5) brightness(.6);
+}
+html.dim .backgrounds {
+-webkit-filter: saturate(.5) brightness(.6);
+-moz-filter: saturate(.5) brightness(.6);
+-o-filter: saturate(.5) brightness(.6);
+-ms-filter: saturate(.5) brightness(.6);
+filter: saturate(.5) brightness(.6);
+}
+@-webkit-keyframes blur-animation {
+0% {
+-webkit-filter: blur(0px) ;
+-moz-filter: blur(0px);
+-o-filter: blur(0px);
+-ms-filter: blur(0px);
+filter: blur(0px);
+
+}
+100% {
+-webkit-filter: blur(4px) saturate(.5) brightness(.66);
+-moz-filter: blur(4px) saturate(.5) brightness(.66);
+-o-filter: blur(4px) saturate(.5) brightness(.66);
+-ms-filter: blur(4px) saturate(.5) brightness(.66);
+filter: blur(4px) saturate(.5) brightness(.66);
+
+}
+}
+@-webkit-keyframes dim-animation {
+0% {
+-webkit-filter: blur(0px) ;
+-moz-filter: blur(0px);
+-o-filter: blur(0px);
+-ms-filter: blur(0px);
+filter: blur(0px);
+
+}
+100% {
+-webkit-filter: blur(0px) saturate(.5) brightness(.4);
+-moz-filter: blur(0px) saturate(.5) brightness(.4);
+-o-filter: blur(0px) saturate(.5) brightness(.4);
+-ms-filter: blur(0px) saturate(.5) brightness(.4);
+filter: blur(0px) saturate(.5) brightness(.4);
+
+}
+}
+html.background-blur-animation .backgrounds {
+-webkit-animation-name: blur-animation;
+-webkit-animation-duration: 1s;
+-webkit-animation-iteration-count: 1;
+-webkit-animation-direction: alternate;
+-webkit-animation-timing-function: ease-out;
+-webkit-animation-fill-mode: forwards;
+-webkit-animation-delay: 0s;
+}
+html.background-dim-animation .backgrounds {
+-webkit-animation-name: dim-animation;
+-webkit-animation-duration: 1s;
+-webkit-animation-iteration-count: 1;
+-webkit-animation-direction: alternate;
+-webkit-animation-timing-function: ease-out;
+-webkit-animation-fill-mode: forwards;
+-webkit-animation-delay: 0s;
+}
+#sidebar {
+-webkit-transform: rotate(270deg) translate(0px, -500px);
+-moz-transform: rotate(270deg) translate(0px, -500px);   
+-o-transform: rotate(270deg) translate(0px, -500px);
+-ms-transform: rotate(270deg) translate(0px, -500px);
+transform: rotate(270deg) translate(0px, -500px);
+}
+.emphasized {
+color: gray;
+font-size: 5em;
+}
+.col2 {
+columns: 2 200px;         /* number of columns and width in pixels*/
+-webkit-columns: 2 200px; /* chrome, safari */
+-moz-columns: 2 200px;    /* firefox */
+-o-columns: 2 200px;
+-ms-columns: 2 200px;
+}
+.big {
+font-size: 15.0em;
+}
+</style>
+
+## Overview {data-background="particle-collide.png" data-state="background-dim-animation"}
+
+* First-ever particle physics data analysis to be performed entirely in the R statistical programming language --- no ROOT or TMVA
+* First-ever completely reproducible (and reusable) HEP analysis
+* Combined *information theory* and *graph analytics* to invent a new technique for discovering hidden relationships and community structure in high-dimensional HEP data
+* Devised a novel fast data-driven feature selection algorithm that identifies the variables with the best predictive power for a given classification or regression task
+* Applied this *general* method to the *specific* problem of quark- and gluon-jet separation
+* This method has found new variables that promise to offer better discrimination power and sensitivity to the differences between quark- and gluon-initiated jets
+
+## Data production pipeline {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Generate Monte Carlo simulated data
+    - *pp* at 7 TeV, high-*p*ᴛ data, Pythia 6
+    - Track jets, Anti-*k*ᴛ with a radial parameter of 0.4
+    - Constituents: "Picotracks" with *p*ᴛ > 0.15 GeV
+    - Jet must be in geometrical acceptance of tracker
+* Use my C++ code to fill ROOT ntuples with engineered features
+* Attach ground-truth class labels ("quark"/"gluon") to each jet
+    - Significant class noise (mislabelled jets) at the 5--10% level
+    - Procedure sometimes fails to assign class (missing labels)
+    - Several labelling schemes exist, but none are perfect because Monte Carlo simulation cannot perfectly simulate real data
+* Write-out data and convert for use in R using **RootTreeToR**
+
+## Jet labelling by ensemble {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- Jets labelled using the partons in the generator event record
+- Used an ensemble labelling scheme with 5 members:
+- Use flavour of parton with highest transverse momentum...
+    1. within radius equal to radius parameter of the jet algorithm
+    2. ghost-associated with jet during clustering
+- QCD-aware jet labelling: cluster *final* partons into jet, only allowing clustering steps that obey QCD and QED Feynman rules, then label particle jet with parton jet...
+    3. within radius equal to radius parameter of the jet algorithm
+    4. ghost-associated with jet during clustering
+    5. *k*ᴛ-based reclustering of final partons to anti-*k*ᴛ particle jets
+    
+## {data-background="plot-flavour-content-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="chord-all-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="chord-mismatching-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Jet filtering {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- Impose a requirement that the jets are isolated to restrict contamination from wide-angle QCD radiation
+    - For each jet, require no other jet within 2.5 times the jet radial parameter of the jet axis
+- Discard jets for which no label could be assigned
+- Discard heavy-flavour jets; they are not the subject of this analysis
+* Single-track jets are removed; it is not possible to construct a meaningful observable for these jets (we need substructure)
+- Reject jets for which there is not concensus between label schemes
+- To track *intercoder agreement*, we use Krippendorff's α
+
+## Jet filtering justification {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- It is axiomatic that the performance of any discrimination algorithm will be measured with respect to its ability to predict the ground-truth class labels (the jet partonic flavour)
+- If we had perfect understanding of the dynamics of QCD, we could deduce the *Bayes optimal decision boundary* that best separates quark- and gluon-initiated jets
+- We attempt to use machine learning to learn an approximation to the Bayes decision boundary
+- *Label noise* (mislabelled jets) blurs and obfuscates this decision boundary, which can thwart a machine learning classifier
+- Rather than engineer a more complex classifier, we instead engineer our *training data* to more clearly expose the structure in it
+
+## Data exploration {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Missingness and floating-point types
+* Variation in magnitude
+* Correlations and partial correlations
+
+## {data-background="missingness-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Missingness and categorisation of data values {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Data stratified by number of tracks per jet
+* Instances for which no physically-meaningful value can be assigned
+    - These are *missing not at random* (MNAR): missing observations related to values of
+unobserved data
+* Many small values below machine ε that are due to round-off error in floating point arithmatic
+    - Variation in their values is not real; reset these values to zero
+    - Small values can incur a performance penalty during floating point arithmatic; flushing to zero might speed-up training
+* Filter features with >50% missing or zero values
+* Filter features with few unique values (low variance)
+
+
+## {data-background="heatmap-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Magnitude map {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- Applied Z-score standardisation so that features have mean 0 and standard deviation 1
+- Additionally, applied Yeo-Johnson power transformations to make features with long-tailed distributions more Gaussian
+
+## {data-background="QQ-plot-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="plot-features-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="correlogram-top-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="qgraph-pearson-cor-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="qgraph-pearson-glasso-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="qgraph-pearson-glasso-cut-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Fast feature selection {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* We want to find the variables that best explain the differences in physics between quark-jets and gluon-jets
+* Typical methods for feature selection too slow
+* Ranked features using an entropy-based method
+* Filter-based method that involves ranking by *information gain* (Kullback–Leibler divergence)
+    - Information gain is based on the concept of entropy from information theory and is commonly used to decide which features to use when growing a decision tree
+* To test method: inject random probes into the data, repeatedly calculate information gain for a large number of bootstrap resamplings, obtain means and confidence interval estimates
+
+## {data-background="plot-infogain-topXpc-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Removing redundant features using mutual information {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- Information gain does not separate redundant features
+- To filter redundant features, I used *mutual information*
+    * In information theory, the mutual information (MI) of two random variables is a measure of their mutual dependence
+    * Quantifies the "amount of information" obtained about one random variable, through the other random variable
+    * Used *symmetric uncertainty*, a normalized variant that we can treat like a correlation
+    
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+
+```{r mutinfo, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=4, fig.cap="Venn diagram for various information measures associated with correlated variables X and Y. The area contained by both circles is the joint entropy H(X,Y). The circle on the left (red and violet) is the individual *Shannon entropy* H(X). The circle on the right (blue and violet) is H(Y). The violet is the **mutual information** I(X;Y).", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("mutinfo.png")
+grid.raster(img)
+```
+
+## {data-background="qgraph-mutual-information-cor-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Feature redundancy {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* We'd like to pick features that have a strong association with the target ("quark"/"gluon") but have weak association with each other
+
+```{r venn, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=4, fig.cap="<small>If Z is the target, for each X and Y measure the total *conditional mutual information* corresponding to the cyan and magenta regions. If the sum is large (and the grey region is small) then this is a good pairing.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("venn.png")
+grid.raster(img)
+```
+
+## {data-background="qgraph-condinfosum-cor-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="clique-panel.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="pearson-clique-panel.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Dimensionality reduction {data-background="neural.jpg" data-state="background-dim-animation"}
+
+If we use linear or non-linear dimensionality reduction techniques to project the data into 2D, do we see any evidence for two distinct statistical populations of jets?
+
+* Principal component analysis (PCA)
+* t-Distributed Stochastic Neighbour Embedding (t-SNE)
+* Deep learning autoencoder:
+
+```{r autoenc, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=2, fig.cap="<small>Autoencoders are symmetric neural nets that learn a low-dimensional representation of the data. They are backfed the inputs as their target outputs, and in doing so are trained to learn the identity function. The nodes in the bottleneck define the coordinates of the reduced represenation. Deep nets have several layers of hidden nodes.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("ae.png")
+grid.raster(img)
+```
+
+
+## {data-background="biplot-poly-cloud-2.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="biplot-poly-cloud-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="biplot-poly-cloud-3.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="tSNE-poly-cloud-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## {data-background="plot-autoenc-whitened-poly-1.png" data-background-size="contain" data-background-color=#ffffff}
+
+## Dimensionality reduction: conclusions {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- No convincing evidence to support a hypothesis that quark- and gluon-initiated jets form two distinct populations
+- The features are probably not informative enough
+- There may be some easy cases from which we can produce a purified sample of quark-initiated jets, which would be useful
+
+## Results {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* High degree of correlation between features, but some groups of features exist that are minimally correlated with each other
+* Correlations between features that might hint at common sensitivity to underlying physics
+* Probably a simple linear classifier might provide performance as good as we can get with this data
+* New features have been found that were hitherto unknown, and these might help us understand the physics involved in the quark and gluon decay process
+
+## What's happening now {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* We have successfully built a test harness for building and assessing various machine learning classifiers
+* Starting with ElasticNet, a generalised linear model fit via penalized maximum likelihood (LASSO, ridge, or ElasticNet regularisation), as the baseline; latest results within a week
+* A simple, parsimonious and interpretable model that may be as 95% good as we can get
+* We prefer to spend our CPU cycles on robust cross-validation with simple model than building complex models that don't generalise to future data
+* Rather than optimising accuracy or AUC and finding the probability threshold for a desired working point, we have built a custom loss function that optimises the working point *directly*
+* Focus on simple to tune models to offer performance guarantees
+
+## Reproducible research {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- The paper (in preparation) is written in R Markdown, a LaTeX-like authoring format that combines the core syntax of Markdown (an easy to write plain-text format) with embedded R code chunks that are run so their output can be included in the final document
+- The markup for the paper contains the entire analysis code used to generate the LaTeX, tables, and plots
+- Greater transparency: no need for "forensic HEP" to figure out how the results were derived from the data! 
+- The pay-off in the (not so) long run is that reuse allows for de-duplication of effort
+- Other researchers (you!) can easily build upon reproducible analyses to create new work or perform secondary analyses
+- We should do more of this!
+
+## That's all for now {data-background="sm-animated.gif" data-state="background-dim-animation"}
+### Thanks for listening!

@@ -1,0 +1,495 @@
+---
+output:
+  revealjs::revealjs_presentation:
+    incremental: false
+    theme: league
+    highlight: espresso
+    center: true
+    smart: true
+    transition: fade
+    mathjax: null
+    reveal_options:
+      slideNumber: true
+    fig_caption: true
+---
+
+## Machine learning for particle physics using R {data-background="04100th.gif"}
+
+Andrew John Lowe
+
+*Wigner Research Centre for Physics,<br>Hungarian Academy of Sciences*
+
+<style>
+.reveal {
+  font-size: 2em;
+}
+.white figure img {
+  background: white;
+}
+html.blur .backgrounds {
+   -webkit-filter: blur(4px) saturate(.5) brightness(.6);
+   -moz-filter: blur(4px) saturate(.5) brightness(.6);
+   -o-filter: blur(4px) saturate(.5) brightness(.6);
+   -ms-filter: blur(4px) saturate(.5) brightness(.6);
+   filter: blur(4px) saturate(.5) brightness(.6);
+}
+html.dim .backgrounds {
+   -webkit-filter: saturate(.5) brightness(.6);
+   -moz-filter: saturate(.5) brightness(.6);
+   -o-filter: saturate(.5) brightness(.6);
+   -ms-filter: saturate(.5) brightness(.6);
+   filter: saturate(.5) brightness(.6);
+}
+@-webkit-keyframes blur-animation {
+  0% {
+    -webkit-filter: blur(0px) ;
+    -moz-filter: blur(0px);
+    -o-filter: blur(0px);
+    -ms-filter: blur(0px);
+    filter: blur(0px);
+
+  }
+  100% {
+    -webkit-filter: blur(4px) saturate(.5) brightness(.66);
+    -moz-filter: blur(4px) saturate(.5) brightness(.66);
+    -o-filter: blur(4px) saturate(.5) brightness(.66);
+    -ms-filter: blur(4px) saturate(.5) brightness(.66);
+    filter: blur(4px) saturate(.5) brightness(.66);
+
+  }
+}
+@-webkit-keyframes dim-animation {
+  0% {
+    -webkit-filter: blur(0px) ;
+    -moz-filter: blur(0px);
+    -o-filter: blur(0px);
+    -ms-filter: blur(0px);
+    filter: blur(0px);
+
+  }
+  100% {
+    -webkit-filter: blur(0px) saturate(.5) brightness(.33);
+    -moz-filter: blur(0px) saturate(.5) brightness(.33);
+    -o-filter: blur(0px) saturate(.5) brightness(.33);
+    -ms-filter: blur(0px) saturate(.5) brightness(.33);
+    filter: blur(0px) saturate(.5) brightness(.33);
+
+  }
+}
+html.background-blur-animation .backgrounds {
+   -webkit-animation-name: blur-animation;
+   -webkit-animation-duration: 1s;
+   -webkit-animation-iteration-count: 1;
+   -webkit-animation-direction: alternate;
+   -webkit-animation-timing-function: ease-out;
+   -webkit-animation-fill-mode: forwards;
+   -webkit-animation-delay: 0s;
+ }
+html.background-dim-animation .backgrounds {
+   -webkit-animation-name: dim-animation;
+   -webkit-animation-duration: 1s;
+   -webkit-animation-iteration-count: 1;
+   -webkit-animation-direction: alternate;
+   -webkit-animation-timing-function: ease-out;
+   -webkit-animation-fill-mode: forwards;
+   -webkit-animation-delay: 0s;
+ }
+</style>
+
+## Introduction: about this talk {data-background="particle-collide.png" data-state="background-dim-animation"}
+
+* I'm a particle physicist, programmer, and aspiring data scientist
+      * Worked for 10 years on the development of core software and algorithms for a multi-stage cascade classifier that processes massive data in real-time (60 TB/s)
+      * Previously a member of team that discovered the Higgs boson
+      * I now work on using advanced machine learning techniques to develop classification algorithms for recognising subatomic particles based on their decay properties
+* I'm going to talk about how switching to **R** has made it easier for me to ask more complex questions from my data than I would have been able to otherwise
+
+
+## What is particle physics? {data-background="sm-animated.gif" data-state="background-dim-animation"}
+
+- The study of subatomic particles and the fundamental forces that act between them
+- Present-day particle physics research represents man's most ambitious
+and organised effort to answer the question: *What is the universe made of?*
+- We have an extremely successful model that was developed throughout the mid to late 20th century
+- But many questions still remain unanswered
+    * Doesn't explain: gravity, identity of dark matter, neutrino oscillations, matter/antimatter asymmetry of universe...
+- To probe these mysteries, we built the **Large Hadron Collider**
+
+
+## The Large Hadron Collider: {data-background="ring.jpg"}
+#### *a 10 billion dollar factory for producing massive amounts of physics data (30&nbsp;PB/year)*</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+
+## {data-background="lhc-anim.gif"}
+
+
+## LHC data flow {data-background="cern-servers.jpg" data-state="background-dim-animation"}
+1. Detected by LHC experiment
+2. Online multi-level filtering (hardware and software)
+3. Transferred to Worldwide Computing Grid, processed in stages:
+    * Tier-0: CERN (Geneva) and Wigner RCP (Budapest)
+    * Tier-1: about a dozen large data centres located worldwide
+    * Tier-2: institute and university clusters
+4. Users run large analysis jobs on the Grid
+5. Data written to locally-analysable files, put on PCs
+6. Turned into plot in a paper
+
+
+## {data-background="cms-root.png" data-state="background-dim"}
+![](root6-banner.png)
+
+- For experimental particle physics, [ROOT](http:://root.cern.ch) is the ubiquitous data analysis tool, and has been for the last 20 years
+- Command language: CINT/CLANG ("interpreted C++") or Python
+    * Small data: work interactively or run macros
+    * Big data: compile with ROOT libraries, run on Grid
+- Data format optimised for large data sets
+- Complex algorithms are difficult to do interactively
+- End up writing huge C++ programs; endless edit-compile-run loops
+- Frequent causes of frustration: difficult for beginners, unintuitive behaviour, hideous default plot style, baffling error messages
+- A 100% non-transferable skill
+<br>
+
+## {data-background="tmva-example.png" data-state="background-dim"}
+![](tmvalogo.png)
+
+* [TMVA](http://tmva.sourceforge.net/) is ROOT's toolkit for machine learning
+* TMVA contains: *feature selection*, *autoencoders*, *deep learning*... and many more things written from scratch that you'll find elsewhere
+* TMVA is single threaded and (unlike ROOT) doesn't scale
+* Cross validation natively supported in *next* release (not now)
+    - External scripts to do this have existed only very recently
+    - No nested cross validation
+
+
+## Why did I choose R? {data-background="Rlogo.png" data-state="background-blur-animation"}
+
+- Chief among those were the need for fast prototyping and high-level abstractions that let me concentrate on what I wanted to achieve, rather than on the mechanics and the highly-granular details of the implementation
+    * Can do more with less typing
+    * Incredibly easy to express what I want to achieve
+- Exponentially-growing number of add-on packages
+- Latest machine learning algorithms are available
+- Great community; about 2 million R users worldwide
+    * Technical questions are answered extremely quickly
+- Beautiful plots that require very little tweaking for publication
+- Pleasant user experience ☺
+
+
+## My analysis: {data-background="jets.png" data-state="background-blur-animation"}
+### Identify particles based on their decay products
+
+* Particles called **quarks** and **gluons** are produced copiously in proton-proton collisions at the LHC
+* Quarks and gluons are not observed individually
+* Instead, we can only measure their decay products
+* What we observe is a cone-shaped spray of particles called a *jet*
+* The measured particles are *clustered* by a jet algorithm (somewhat similar to *k-means*), and the resultant jets are viewed as a proxy to the initial quarks and gluons that we can't measure
+* Jets are a common feature in high-energy particle collisions
+
+##  {data-background="jets-dim.png"}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+When two high-energy protons collide, the quarks and gluons that compose them (here only quarks are depicted in green, red, and blue) can hit each other. Some of these quarks and gluons (pink balls) can fly away and "hadronize", forming directional jets of energetic particles (white balls)
+
+## {data-background="cms-sixjets.png"}
+
+## The problem in a nutshell {data-background="gg-run177878-evt188723900-3d-nologo.jpg" data-state="background-dim-animation"}
+
+- Beams of energetic protons collide inside our detector
+- Quarks and gluons emerge and decay into sprays of particles
+- Algorithms cluster these decay products into jets
+- For each jet, we'd like to know what initiated it
+- Was it a quark or a gluon?
+- Being able to accurately discriminate between quark- and gluon-initiated jets would be an extremely powerful tool in the search for new particles and new physics
+- This is an archetypal classification problem that might be amenable to machine learning
+
+
+## Machine learning & particle physics {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Machine learning is more or less what is commonly known in particle physics as multivariate analysis (MVA)
+* Used for many years but faced widespread scepticism
+* Use of multivariate pattern recognition algorithms was basically taboo in new particle searches until recently
+* Much prejudice against using what were considered "black box" selection algorithms
+* Artificial neural networks and Fisher discriminants (linear discriminant analysis) were used somewhat in the 1990's
+* Boosted Decision Trees (AdaBoost, 1996) is the favourite algorithm used for many analyses (1st use: 2004)
+<br>
+
+<!---
+<small>[Successes, Challenges and Future Outlook of Multivariate Analysis In HEP](http://iopscience.iop.org/article/10.1088/1742-6596/608/1/012058/meta), Helge Voss, 2015 J. Phys.: Conf. Ser. 608 (2015) 012058; [Higgs Machine Learning Challenge visits CERN](http://indico.cern.ch/event/382895/), 19 May 2015, CERN; [Boosted Decision Trees as an Alternative to Artificial Neural Networks for Particle Identification](http://arxiv.org/abs/physics/0408124), Hai-Jun Yang *et al.*, Nucl.Instrum.Meth. A543 (2005) 577-584</small>
+--->
+
+
+## Data production pipeline {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* Use experiment's software to process Monte Carlo simulated data that contains lots of jets
+    - Insert my own C++ code to compute handcrafted features
+* Attach ground-truth class labels ("quark"/"gluon") to each jet
+* Write-out data and convert for use in R using **RootTreeToR**
+
+
+## Cleaning data in R {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* **data.table** is extremely useful here:
+    - **fread** found to be at least twice as fast as other methods I tried
+    - Helps me filter my data and is super-fast, especially using keys:
+  
+```{r eval = FALSE}
+setkey(DT, numTracks) # Set number of particle tracks to be the key
+DT <- DT[!.(1)] # Remove all single-track jets
+DT[, (bad.cols) := NULL] # Remove junk columns
+```
+
+* **dplyr** was invaluable for data analysis *dematryoshkafication*
+    - Unwrap nested function calls
+    - Data manipulation with dplyr mirrors the way we think about processing data: like on a production line, performing actions on an object sequentially, in a stepwise manner
+    - Enables complex tasks to be constructed from simpler components that are glued together with the **%>%** operator
+
+
+## More data munging {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* To give me some extra space in RAM to work I used **SOAR** (stored object caches for R):
+
+```{r eval = FALSE}
+Sys.setenv(R_LOCAL_CACHE = "soar_cache")
+Store(DT) # data.table now stored as RData file on disk and out of RAM
+```
+
+* **caret** also provides some useful data-munging; I could reduce the size of my data by more than 50% with a conservative cut on correlations between features:
+
+```{r eval = FALSE}
+highly.correlated <- findCorrelation(
+  cor(DT[,-ncol(DT), with = FALSE], method = "pearson"),
+  cutoff = 0.95, names = TRUE)
+```
+
+* Removing duplicate and highly-correlated features was critical for enabling my data to fit in RAM
+
+## Data exploration {data-background="neural.jpg" data-state="background-dim-animation"}
+
+```{r soar, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center'}
+require(SOAR)
+Sys.setenv(R_LOCAL_CACHE="soar_cache_backup")
+Attach()
+```
+
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Missingness map of the complete dataset
+
+```{r missingness, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=5, fig.width=9, fig.cap="<small>Missingness map that shows features with missing values, zero values, or values below the machine epsilon. I used this information to filter the data. Package: **ggplot2**.</small>", cache=TRUE}
+require(ggplot2)
+plot(ggMissingness)
+```
+
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Magnitude map of the complete dataset 
+
+```{r heatmap, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=5, fig.width=9, fig.cap="<small>Magnitude map that shows variation in values of features before centering and scaling. Package: **ggplot2**.</small>", cache=TRUE}
+require(ggplot2)
+plot(ggClustered)
+```
+
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Visualising a correlation matrix as a force-directed network 
+
+```{r qgraph-p, eval = TRUE, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=5, fig.width=9, fig.cap="<small>Connection strength between features (nodes) is proportional to their Pearson correlation. Package: **qgraph**.</small>", cache=TRUE}
+require(qgraph)
+qgraph(Qp.cor, color = "darkgrey", label.cex = 0.75)
+```
+
+<!---
+
+### Visualising a correlation matrix as a force-directed network
+
+```{r qgraph-s, eval = TRUE, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=5.5, fig.width=9, fig.cap="<small>Connection strength between features (nodes) is proportional to their Spearman correlation. Package: **qgraph**.</small>", cache=TRUE}
+require(qgraph)
+qgraph(Qs.cor, color = "darkgrey", label.cex = 0.75)
+```
+
+--->
+
+## Dimensionality reduction {data-background="neural.jpg" data-state="background-dim-animation"}
+
+If we use linear or non-linear dimensionality reduction techniques to project the data into 2D, do we see any evidence for two distinct statistical populations of jets?
+
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Principal Component Analysis
+
+```{r biplot, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=5, fig.cap="<small>Covariance biplot: lengths of loading vectors approximate standard deviations, cosines between vectors approximate correlations. Overlaid is 2D KDE showing where the classes are distributed. Package: **ggbiplot**.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("biplot-poly-cloud-1.png")
+grid.raster(img)
+# require(ggbiplot)
+# require(data.table)
+# # Define colour palette to match colours of quarks and gluons later:
+# gg_colour_hue <- function(n) {
+#   hues = seq(15, 375, length = n+1)
+#   hcl(h = hues, l = 65, c = 100)[1:n]
+# }
+# ggcols = gg_colour_hue(12)
+# ggRed <- ggcols[1]
+# ggBlue <- ggcols[7]
+# label.schemes <- "Flavour"
+# dat.pca <- prcomp(as.data.frame(DT.Z[, -(label.schemes), with = FALSE]), 
+#                  center = TRUE,
+#                  scale. = TRUE)
+# Flavour <- DT.Z$Flavour
+# 
+# # Plot looks better if we reorder the factors to reverse which is plotted first:
+# Flavour.reordered <- relevel(Flavour, "quark")
+# biplot.poly <- ggbiplot(dat.pca,
+#                         scale =  1,
+#                         obs.scale = 1,
+#                         var.scale = 1,
+#                         var.axes = TRUE,
+#                         groups = Flavour.reordered,
+#                         circle = TRUE,
+#                         varname.size = 3,
+#                         alpha = 0.5) +
+#   stat_density2d(geom = "polygon",
+#                  aes(fill = Flavour.reordered, alpha = (..level..) / 20),
+#                  bins = 20,
+#                  contour = TRUE) + 
+#   scale_fill_manual(values = c("gluon" = ggRed, "quark" = ggBlue)) +
+#   stat_density2d(geom = "density2d", 
+#                  aes(colour = Flavour.reordered, alpha = ..level..),
+#                  bins = 20,
+#                  contour = TRUE) + 
+#   scale_colour_manual(values = c("gluon" = ggRed, "quark" = ggBlue),
+#                       guide = FALSE) +
+#   scale_alpha(guide = FALSE) +
+#   #geom_point(aes(colour = Flavour), size = 1, alpha = 0.5) +
+#   # scale_x_discrete(breaks = NULL) +
+#   # scale_y_discrete(breaks = NULL) +
+#   theme_bw() +
+#   theme(legend.title = element_blank())
+# 
+# # Hack the layers to remove points and bring text and arrows to foreground:
+# biplot.poly$layers[[3]] <- NULL
+# biplot.poly$layers <- c(biplot.poly$layers,
+#                         biplot.poly$layers[[1]],
+#                         biplot.poly$layers[[2]],
+#                         biplot.poly$layers[[3]])
+# plot(biplot.poly)
+```
+
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### t-Distributed Stochastic Neighbour Embedding 
+
+```{r TSNE, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=5, fig.width=9, fig.cap="<small>t-SNE is a popular method for exploring high-dimensional data. Package: **Rtsne**.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("tSNE-poly-cloud-1.png")
+grid.raster(img)
+```
+
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Deep learning autoencoder with ICA whitening 
+
+```{r autoenc, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=5, fig.width=9, fig.cap="<small>Architecture: 113--100--100--100--2--100--100--100--113. Tanh activation, 600 epochs, features were whitened with independent component analysis and standardised to be in [0, 1]. Package: **h2o**. Surprisingly fast!</small>", cache=FALSE}
+
+require(png)
+require(grid)
+img <- readPNG("plot-autoenc-poly-1.png")
+grid.raster(img)
+```
+
+## Dimensionality reduction: conclusions {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- No convincing evidence to support a hypothesis that quark- and gluon-initiated jets form two distinct populations
+- The features are probably not informative enough
+- There may be some easy cases from which we can produce a purified sample of quark-initiated jets, which would be useful for new particle searches
+
+
+## Fast feature selection {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* We want to find the variables that best explain the differences in physics between quark-jets and gluon-jets
+* Ranked features using an entropy-based method from **CORElearn**
+* Filter-based method that involves ranking by *information gain* (Kullback–Leibler divergence)
+    - Information gain is based on the concept of entropy from information theory and is commonly used to decide which features to use when growing a decision tree
+* To test method: inject random probes into the data, repeatedly calculate information gain for a large number of bootstrap resamplings and average
+
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+
+```{r infogain, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=6, fig.cap="<small>Distribution of information gain with 68% and 95% bootstrap-estimated confidence intervals for each feature.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("infogain.png")
+grid.raster(img)
+```
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Removing redundant features using mutual information
+
+- Information gain does not separate redundant features
+- To filter redundant features, I used *mutual information*
+    * In information theory, the mutual information (MI) of two random variables is a measure of their mutual dependence
+    * Quantifies the "amount of information" obtained about one random variable, through the other random variable
+    
+```{r mutinfo, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=2.25, fig.cap="<small>Venn diagram for various information measures associated with correlated variables X and Y. The area contained by both circles is the joint entropy H(X,Y). The circle on the left (red and violet) is the individual *Shannon entropy* H(X). The circle on the right (blue and violet) is H(Y). The violet is the **mutual information** I(X;Y).</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("mutinfo.png")
+grid.raster(img)
+```
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Mutual information: quantifies the degree of correlation between features
+
+```{r mutinfonet, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=4.75, fig.width=9, fig.cap="<small>Mutual information matrix visualised as a force-directed network. Node size is proportional to information gain. Packages: **qgraph**, **WGCNA**.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("qgraph-mutual-information-cor-1.png")
+grid.raster(img)
+```
+
+## {data-background="neural.jpg" data-state="background-dim-animation"}
+### Feature redundancy: tests whether pairs of features have better joint discrimination than either feature individually
+
+```{r redundancy, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, fig.align='center', fig.height=4.75, fig.width=9, fig.cap="<small>Feature redundancy matrix visualised as a force-directed network. Node size is proportional to information gain. Packages: **qgraph**, **WGCNA**.</small>", cache=TRUE}
+
+require(png)
+require(grid)
+img <- readPNG("qgraph-redundancy-cor-threshold-holm-1.png")
+grid.raster(img)
+```
+
+
+## Results {data-background="neural.jpg" data-state="background-dim-animation"}
+
+* High degree of correlation between features, but some groups of features exist that are minimally correlated with each other
+* Correlations between features that might hint at common sensitivity to underlying physics
+* Probably a simple linear classifier might provide performance as good as we can get with this data
+* New features have been found that were hitherto unknown, and these show promise in helping us understand the physics involved in the quark and gluon decay process
+
+## Summary {data-background="neural.jpg" data-state="background-dim-animation"}
+
+- First-ever particle physics data analysis performed entirely in R
+- Devised fast selection method that has found new discriminant variables that promise to improve discovery reach in searches for new particles at CERN and beyond
+- Pioneered implementation of reproducible research by writing the first-ever fully reproducible and repurposable particle physics analysis paper using R Markdown
+- R has enabled me to do far more than I could have achieved using only the standard tools available to particle physicists
+
+
+## Thanks!
+
+[https://www.linkedin.com/in/andrewjohnlowe](https://www.linkedin.com/in/andrewjohnlowe)
+
+
