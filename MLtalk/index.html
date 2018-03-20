@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Andrew John Lowe" />
+  <title>An introduction to machine learning for particle physics</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="libs/reveal.js-3.3.0/css/reveal.css"/>
+
+
+
+<link rel="stylesheet" href="libs/reveal.js-3.3.0/css/theme/league.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="styles.css"/>
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'libs/reveal.js-3.3.0/css/print/pdf.css' : 'libs/reveal.js-3.3.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+    <script src="libs/reveal.js-3.3.0/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">An introduction to machine learning for particle physics</h1>
+    <h2 class="author">Andrew John Lowe</h2>
+    <h3 class="date">3 August 2016</h3>
+</section>
+
+<section class="slide level2">
+
+<style>
+.white figure img {
+  background: white;
+}
+html.blur .backgrounds {
+   -webkit-filter: blur(4px) saturate(.5) brightness(.7);
+   -moz-filter: blur(4px) saturate(.7) brightness(.8);
+   -o-filter: blur(4px) saturate(.7) brightness(.8);
+   -ms-filter: blur(4px) saturate(.7) brightness(.8);
+   filter: blur(4px) saturate(.7) brightness(.8);
+}
+html.dim .backgrounds {
+   -webkit-filter: saturate(.5) brightness(.7);
+   -moz-filter: saturate(.7) brightness(.8);
+   -o-filter: saturate(.7) brightness(.8);
+   -ms-filter: saturate(.7) brightness(.8);
+   filter: saturate(.7) brightness(.8);
+}
+@-webkit-keyframes blur-animation {
+  0% {
+    -webkit-filter: blur(0px) ;
+    -moz-filter: blur(0px);
+    -o-filter: blur(0px);
+    -ms-filter: blur(0px);
+    filter: blur(0px);
+
+  }
+  100% {
+    -webkit-filter: blur(5px) saturate(.5) brightness(.4);
+    -moz-filter: blur(6px) saturate(.7) brightness(.5);
+    -o-filter: blur(6px) saturate(.7) brightness(.5);
+    -ms-filter: blur(6px)saturate(.7) brightness(.5);
+    filter: blur(6px) saturate(.7) brightness(.5);
+
+  }
+}
+html.background-blur-animation .backgrounds {
+   -webkit-animation-name: blur-animation;
+   -webkit-animation-duration: 5s;
+   -webkit-animation-iteration-count: 1;
+   -webkit-animation-direction: alternate;
+   -webkit-animation-timing-function: ease-out;
+   -webkit-animation-fill-mode: forwards;
+   -webkit-animation-delay: 0s;
+ }
+</style>
+<h3 id="about-the-speaker">About the speaker</h3>
+<p><small></p>
+<ul>
+<li><p><strong>Research Fellow</strong>, Wigner Research Centre for Physics, Hungary (2013–present)</p></li>
+<li><p><strong>Postdoctoral Fellow</strong>, California State University, Fresno, USA (2010–2012)</p></li>
+<li><p><strong>Postdoctoral Fellow</strong>, Indiana University, USA (2008–2009)</p></li>
+<li><p><strong>PhD student</strong>, Royal Holloway, University of London, UK (2001–2008)</p></li>
+<li><p><strong>MSc student</strong>, Royal Holloway, University of London, UK (2000–2001)</p></li>
+<li><p><strong>Assistant Research Scientist</strong>, National Physical Laboratory, UK (1998–2000)</p></li>
+<li><p><strong>BSc student</strong>, Royal Holloway, University of London, UK (1993–1996)</p></li>
+</ul>
+<p></small></p>
+</section>
+<section id="what-is-data-science" class="slide level2 white">
+<h1>What is Data Science?</h1>
+<figure>
+<img src="Data_Science_VD.png" alt="" />
+</figure>
+<p><small>The Data Science Venn Diagram, by Drew Conway</small></p>
+</section>
+<section id="another-interpretation" class="slide level2">
+<h1>Another interpretation</h1>
+<p><img src="index_files/figure-revealjs/unicorn-1.png" style="display: block; margin: auto;" /></p>
+<p><small>People with all these skills are rare!</small></p>
+</section>
+<section id="what-does-the-big-data-landscape-look-like-outside-particle-physics" class="slide level2">
+<h1>What does the “Big Data” landscape look like outside particle physics?</h1>
+</section>
+<section class="slide level2">
+
+<figure>
+<img src="Big-Data-Landscape-2016-v18-FINAL.png" alt="" />
+</figure>
+<!---
+<small>The data science ecosystem is rich and vast!</small>
+--->
+</section>
+<section id="where-is-machine-learning-used" class="slide level2">
+<h1>Where is machine learning used?</h1>
+</section>
+<section class="slide level2">
+
+<figure>
+<img src="ml-landscape.png" alt="" />
+</figure>
+<!---
+<small>Take-away message: there's a huge buzz around machine learning right now, and lots of companies want to use it</small>
+--->
+</section>
+<section id="what-is-machine-learning" class="slide level2">
+<h1>What is machine learning?</h1>
+<ul>
+<li>Arthur Samuel (1959): Field of study that gives computers the ability to learn without being explicitly programmed</li>
+<li>Tom Mitchell (1998): A computer program is said to learn from experience <span class="math inline">\(E\)</span> with respect to some task <span class="math inline">\(T\)</span> and some performance measure <span class="math inline">\(P\)</span>, if its performance on <span class="math inline">\(T\)</span>, as measured by <span class="math inline">\(P\)</span>, improves with experience <span class="math inline">\(E\)</span></li>
+<li>Traditional programming versus machine learning:</li>
+</ul>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /></p>
+</section>
+<section id="machine-learning-particle-physics" class="slide level2">
+<h1>Machine learning &amp; particle physics</h1>
+<ul>
+<li>Machine learning is more or less what is commonly known in particle physics as multivariate analysis (MVA)</li>
+<li>Used for many years but faced widespread scepticism</li>
+<li>Use of multivariate pattern recognition algorithms was basically taboo in new particle searches until recently</li>
+<li>Much prejudice against using what were considered “black box” selection algorithms</li>
+<li>Artificial neural networks and Fisher discriminants (linear discriminant analysis) were used somewhat in the 1990’s</li>
+<li>Boosted Decision Trees (AdaBoost, 1996) is the favourite algorithm used for many analyses (1st use: 2004) <br></li>
+</ul>
+<p><small><a href="http://iopscience.iop.org/article/10.1088/1742-6596/608/1/012058/meta">Successes, Challenges and Future Outlook of Multivariate Analysis In HEP</a>, Helge Voss, 2015 J. Phys.: Conf. Ser. 608 (2015) 012058; <a href="http://indico.cern.ch/event/382895/">Higgs Machine Learning Challenge visits CERN</a>, 19 May 2015, CERN; <a href="http://arxiv.org/abs/physics/0408124">Boosted Decision Trees as an Alternative to Artificial Neural Networks for Particle Identification</a>, Hai-Jun Yang <em>et al.</em>, Nucl.Instrum.Meth. A543 (2005) 577-584</small></p>
+</section>
+<section id="statistical-learning-versus-machine-learning" class="slide level2">
+<h1>Statistical Learning versus Machine Learning</h1>
+<ul>
+<li>Machine learning arose as a subfield of Artificial Intelligence.</li>
+<li>Statistical learning arose as a subfield of Statistics</li>
+<li>There is much overlap</li>
+<li>Machine learning has a greater emphasis on large scale applications and prediction accuracy</li>
+<li>Statistical learning emphasizes models and their interpretability, and precision and uncertainty</li>
+<li>But the distinction has become more and more blurred, and there is a great deal of “cross-fertilisation”</li>
+<li>In the following, we’ll use the term “machine learning”, regardless of the origin of specific methods</li>
+</ul>
+</section>
+<section id="types-of-machine-learning" class="slide level2">
+<h1>Types of machine learning</h1>
+<ul>
+<li><strong>Supervised learning</strong>: learn from examples and make predictions for new data</li>
+<li><strong>Unsupervised learning</strong>: looking for patterns in the data</li>
+<li>Other types exist (<em>e.g.</em>, reinforcement learning, semi-supervised learning, recommender systems)</li>
+</ul>
+</section>
+<section id="supervised-learning" class="slide level2">
+<h1>Supervised learning</h1>
+<ul>
+<li>We have an outcome measurement <span class="math inline">\(Y\)</span> (also called dependent variable, response, target)</li>
+<li>We have a vector of <span class="math inline">\(p\)</span> predictor measurements <span class="math inline">\(X\)</span> (also called regressors, covariates, features, attributes, independent variables)</li>
+<li>In the <em>regression</em> problem, <span class="math inline">\(Y\)</span> is quantitative (<em>e.g.</em>, price, blood pressure, voltage)</li>
+<li>In the <em>classification</em> problem, <span class="math inline">\(Y\)</span> is categorical (<em>e.g.</em>, dead/alive, signal/background, digit 0–9, particle type, malignant/benign)</li>
+<li>We have training data <span class="math inline">\((x_1, y_1),~\dots~,(x_N , y_N)\)</span>: <span class="math inline">\(N\)</span> observations (examples, instances, cases, events) of these measurements</li>
+<li>Learns a mapping from the inputs to the outputs</li>
+</ul>
+</section>
+<section id="supervised-learning-objectives" class="slide level2">
+<h1>Supervised learning objectives</h1>
+<p>On the basis of the training data we would like to:</p>
+<ul>
+<li>Accurately predict unseen test cases</li>
+<li>Understand which inputs affect the outcome</li>
+<li>Assess the quality of our predictions and inferences</li>
+</ul>
+</section>
+<section id="unsupervised-learning" class="slide level2">
+<h1>Unsupervised learning</h1>
+<ul>
+<li>No outcome variable, just a set of predictors (features) measured on a set of samples</li>
+<li>Objective is more fuzzy: find groups of samples that behave similarly, find features that behave similarly, find linear combinations of features with the most variation</li>
+<li>Difficult to know how well your are doing</li>
+<li>Different from supervised learning, but can be useful as a pre-processing step for supervised learning</li>
+</ul>
+</section>
+<section id="an-example-of-unsupervised-learning-in-hep" class="slide level2" data-background="jets.png" data-state="background-blur-animation">
+<h1>An example of unsupervised learning in HEP</h1>
+<h3 id="jet-reconstruction">Jet reconstruction</h3>
+<ul>
+<li>A jet is a cone-shaped spray of hadrons and other particles produced by the fragmentation of a quark or a gluon</li>
+<li>Jet finding involves clustering (gathering together) charged particle tracks and/or calorimeter energy deposits in a detector</li>
+<li>Exact definition of what constitutes a jet in the detector depends a lot on the specific algorithm used to build jets from the hadrons that are detected</li>
+<li>Jet finding is the approximate attempt to reverse-engineer the process of hadronisation</li>
+<li>Several different approaches and algorithms exist, but the most popular are <strong>sequential recombination algorithms</strong> (aka <strong>hierarchical agglomerative clustering</strong>)</li>
+<li><em>Cluster analysis</em> is a large sub-field of machine learning</li>
+</ul>
+</section>
+<section id="jet-reconstruction-1" class="slide level2">
+<h1>Jet reconstruction</h1>
+<figure>
+<img src="clustering.png" alt="" />
+</figure>
+<p>Jets are viewed as a proxy to the initial quarks and gluons that we can’t measure and are a common feature in high-energy particle collisions</p>
+</section>
+<section class="slide level2">
+
+<h3 id="a-six-jet-event-seen-by-cms">A six-jet event seen by CMS</h3>
+<p><img src="index_files/figure-revealjs/cms-sixjets-1.png" style="display: block; margin: auto;" /></p>
+<p>View along detector beam axis</p>
+</section>
+<section id="linear-regression-with-one-variable" class="slide level2">
+<h1>Linear regression with one variable</h1>
+<ul>
+<li>In regression problems, we are taking input variables and trying to fit the output onto a <em>continuous</em> expected result function</li>
+<li>We have a single output <span class="math inline">\(y\)</span> (we are doing supervised learning) and a single feature <span class="math inline">\(x\)</span></li>
+<li>Our hypothesis function has the general form: <span class="math inline">\(\hat{y} = \theta_0 + \theta_1{x}\)</span></li>
+<li>Choose <span class="math inline">\(\theta_0, \theta_1\)</span> so that <span class="math inline">\(\hat{y}\)</span> is close to <span class="math inline">\(y\)</span> for training examples <span class="math inline">\((x,y)\)</span></li>
+<li>For notational compactness, we can arrange the parameters in a vector:</li>
+</ul>
+<p><span class="math display">\[\Theta = \begin{bmatrix}\theta_0 \\ \theta_1\end{bmatrix}\]</span></p>
+</section>
+<section id="cost-or-loss-function" class="slide level2">
+<h1>Cost (or loss) function</h1>
+<ul>
+<li>We can measure the accuracy of our hypothesis function by using a <strong>cost function</strong> (also known as a <strong>loss function</strong>)</li>
+<li>Estimate parameters as the values that minimise the following cost function (sum of squared residuals):</li>
+</ul>
+<p><span class="math display">\[
+J(\Theta) = \sum_{i=1}^{N} \left( y_i - \hat{y}_i \right)^2
+\]</span></p>
+<ul>
+<li>Squaring the residuals <span class="math inline">\(y_i - \hat{y_i}\)</span> ensures their contribution to <span class="math inline">\(J\)</span> is always positive</li>
+<li><span class="math inline">\(J\)</span> is a measure of how bad our fit is to the training data</li>
+</ul>
+</section>
+<section id="gradient-descent" class="slide level2">
+<h1>Gradient descent</h1>
+<ul>
+<li>We want to find the minimum of the cost function <span class="math inline">\(J\)</span></li>
+<li>The gradient descent algorithm is:</li>
+<li>Start at some <span class="math inline">\(\Theta_0 = (\theta_0, \theta_1)\)</span></li>
+<li>Repeat until convergence (measured by some stopping criterion):</li>
+</ul>
+<p><span class="math display">\[
+\Theta_{j+1} = \Theta_{j} - {\alpha}\frac{\partial}{\partial{\Theta_j}}J(\Theta_j)
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\alpha\)</span> is the <em>learning rate</em></li>
+<li>Intuitively, what we are doing is walking down the cost function <span class="math inline">\(J\)</span> in the direction of the tangent to <span class="math inline">\(J\)</span>, with step size controlled by the learning rate <span class="math inline">\(\alpha\)</span>, to find the minimum of <span class="math inline">\(J\)</span></li>
+</ul>
+</section>
+<section id="problems-with-gradient-descent" class="slide level2">
+<h1>Problems with gradient descent</h1>
+<ul>
+<li>If <span class="math inline">\(\alpha\)</span> is too small, gradient descent can be slow</li>
+<li>If <span class="math inline">\(\alpha\)</span> is too big, gradient descent might overshoot the minimum, fail to converge, or even diverge</li>
+<li>If <span class="math inline">\(J\)</span> has more than one minimum, gradient descent might get stuck in a local minimum instead of finding the global minimum: the solution can be sensitive to starting point <span class="math inline">\(\Theta_0\)</span></li>
+</ul>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /></p>
+</section>
+<section class="slide level2">
+
+<section>
+<h1>
+Improvements to gradient descent
+</h1>
+<ul>
+<li>More sophisticated algorithms than gradient descent are used in practice, but the general principle is the same</li>
+<li>If you are performing linear regression and your training sample has many observations, gradient descent would require a large summation before gradient descent can make a single step <span class="math inline">\(\rightarrow\)</span> can be very slow!
+<ul>
+<li>We can <em>parallelise</em> the computation by breaking the summation into chunks and spreading them across several CPUs</li>
+</ul></li>
+<li>For each step of gradient descent, we can perform the summation on a randomly chosen single training example; this is <strong>stochastic gradient descent</strong> (SGD)
+<ul>
+<li>SGD’s path to a minimum jitters and is less direct,</li>
+<li>SGD unlikely to converge at a minimum and will instead wander around it randomly, but usually result is close enough</li>
+</ul></li>
+<li>Other, more advanced, algorithms are available that are often faster than gradient descent and have the advantage that there is no need to manually pick <span class="math inline">\(\alpha\)</span></li>
+</ul>
+</section>
+<section id="comparison-of-gradient-based-minimisation-methods" class="slide level2">
+<h1>Comparison of gradient-based minimisation methods</h1>
+<figure>
+<img src="grad.gif" alt="" />
+</figure>
+</section>
+</section>
+<section id="multivariate-linear-regression" class="slide level2">
+<h1>Multivariate linear regression</h1>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> Linear regression with multiple variables is a trivial extension
+</p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> We have a <em>feature vector</em> — our set of features:
+</p>
+<p><span class="math display">\[
+X = [x_0, x_1, \cdots, x_p]
+\]</span></p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> For convenience of notation, we define <span class="math inline">\(x_0 = 1\)</span>
+</p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> We define our hypothesis function as follows:
+</p>
+<p><span class="math display">\[
+\hat{y} = \theta_0 + \theta_1{x_1} + \cdots + \theta_p{x_p} = \Theta^T{X}
+\]</span></p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> Our cost function is (where <span class="math inline">\(y\)</span> is the vector of all output values):
+</p>
+<p><span class="math display">\[
+J(\Theta) = {(y - X\Theta)^T}{(y - X\Theta)}
+\]</span></p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> Our gradient descent rule becomes:
+</p>
+<p><span class="math display">\[
+\Theta_{j+1} = \Theta_{j} - {\alpha}{\nabla}J(\Theta_j)
+\]</span></p>
+</section>
+<section id="feature-scaling" class="slide level2" data-background="valley.png" data-state="background-blur-animation">
+<h1>Feature scaling</h1>
+<ul>
+<li>Suppose we are performing multivariate linear regression with two features <span class="math inline">\(x_1, x_2\)</span> which differ greatly in scale</li>
+<li><span class="math inline">\(J(\Theta)\)</span> will have the shape of a bowl that has been “stretched” — boat shaped, or like a long thin valley</li>
+<li>Gradient descent can be slow as it oscillates inefficiently down to the minimum, bouncing between opposite sides of the “valley”</li>
+<li>Speed up gradient descent by making the features similar in scale</li>
+<li>We can make the ranges of the features the same</li>
+<li>Usually apply z-score normalisation: <span class="math inline">\(x_i^\prime = ({x_i - \bar{x}_i})/{s_i}\)</span>, where <span class="math inline">\(\bar{x}_i\)</span> and <span class="math inline">\(s_i\)</span> are the sample mean and standard deviation of feature <span class="math inline">\(i\)</span></li>
+<li>Some machine learning methods (<em>e.g.</em>, support vector machines) require feature scaling, and it’s good practice to do it anyway, although it’s not always necessary</li>
+<li>Often log transform features with skewed distributions</li>
+</ul>
+</section>
+<section id="polynomial-regression" class="slide level2">
+<h1>Polynomial regression</h1>
+<ul>
+<li>We can improve our features and the form of our hypothesis function in a couple different ways.</li>
+<li>Our hypothesis function need not be linear if that does not fit the data well</li>
+<li>We can add higher-order terms that can also account for interactions between features</li>
+<li>Feature scaling is required to avoid features blowing up (<em>e.g.</em>, if <span class="math inline">\(x_1\)</span> has range <span class="math inline">\(1\)</span>–<span class="math inline">\(10^3\)</span> then range of <span class="math inline">\(x_1^2\)</span> becomes <span class="math inline">\(1\)</span>–<span class="math inline">\(10^6\)</span>)</li>
+<li>For a single variable, our hypothesis function looks like this:</li>
+</ul>
+<p><span class="math display">\[
+\hat{y} = \theta_0 + \theta_1{x_1} + \theta_2{x_1^2} + \cdots + \theta_p{x_1^p}
+\]</span></p>
+</section>
+<section id="polynomial-regression-on-car-data" class="slide level2">
+<h1>Polynomial regression on car data</h1>
+<figure>
+<img src="auto.png" alt="" />
+</figure>
+<p><small>What degree polynomial is best? We’ll discuss how this choice is made later.</small></p>
+</section>
+<section id="logistic-regression" class="slide level2">
+<h1>Logistic regression</h1>
+<ul>
+<li>Now switching from regression problems to classification problems</li>
+<li>Don’t be confused by the name “logistic regression”; it is named that way for historical reasons</li>
+<li>To start with, consider a binary classification problem where <span class="math inline">\(y \in \{0,1\}\)</span>, where 0 is usually taken as the “negative class” and 1 as the “positive class” and
+<ul>
+<li>0 = background, 1 = signal</li>
+<li>0 = good email, 1 = spam</li>
+<li><em>etc.</em></li>
+</ul></li>
+<li>We could use linear regression to predict the class probabilities, and map all predictions <span class="math inline">\(&lt;\)</span> 0.5 as 1 and <span class="math inline">\(&gt;\)</span> 0.5 as 1, but we run into problems with probabilities less than 0 or greater than 1</li>
+<li>Our hypothesis function should satisfy: <span class="math inline">\(0 \leq \hat{y} \leq 1\)</span></li>
+</ul>
+</section>
+<section id="logistic-function" class="slide level2">
+<h1>Logistic function</h1>
+<ul>
+<li>The function <span class="math display">\[
+f(x) = \frac{1}{1+e^{-x}}
+\]</span><br /> shown here, maps any real number to the (0,1) interval, making it useful for transforming an arbitrary-valued function into a function better suited for classification</li>
+</ul>
+<figure>
+<img src="Logistic_function.png" alt="" />
+</figure>
+</section>
+<section id="logistic-regression-hypothesis-representation" class="slide level2">
+<h1>Logistic regression hypothesis representation</h1>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> Logistic regression uses the function:
+</p>
+<p><span class="math display">\[
+P(X) = \frac{e^{\theta_0 + \theta_1{x_1} + \cdots + \theta_p{x_p}}}{1+e^{\theta_0 + \theta_1{x_1} + \cdots + \theta_p{x_p}}}
+\]</span></p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> or, more compactly:
+</p>
+<p><span class="math display">\[
+P(X) = \frac{e^{\Theta^T{X}}}{1+e^{\Theta^T{X}}}
+\]</span></p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> A bit of rearrangement gives:
+</p>
+<p><span class="math display">\[
+\log\left(\frac{P(X)}{1-P(X)}\right) = \theta_0 + \theta_1{x_1} + \cdots + \theta_p{x_p} = \Theta^T{X}
+\]</span></p>
+<p align="left">
+<span class="math inline">\(\bullet\)</span> This transformation is called the <em>log odds</em> or <em>logit</em> of <span class="math inline">\(P(X)\)</span>
+</p>
+</section>
+<section id="from-probabilities-to-class-predictions" class="slide level2">
+<h1>From probabilities to class predictions</h1>
+<ul>
+<li>To estimate the parameters <span class="math inline">\(\Theta\)</span>, we can use gradient descent with the cost function:</li>
+</ul>
+<p><span class="math display">\[
+J(\Theta) = (-y^{T}\log(\hat{y})-(1-y)^{T}\log(1-\hat{y}))
+\]</span></p>
+<ul>
+<li>In order to get our discrete 0 or 1 classification, we can translate the output of the hypothesis function as follows:</li>
+</ul>
+<p><span class="math display">\[
+\hat{y} \geq 0.5 \implies y = 1\\
+\hat{y} &lt; 0.5 \implies y = 0\\
+\]</span></p>
+<ul>
+<li>The <em>decision boundary</em> is the line that separates the area where <span class="math inline">\(y=0\)</span> and where <span class="math inline">\(y=1\)</span></li>
+</ul>
+</section>
+<section id="logistic-regression-decision-boundary" class="slide level2">
+<h1>Logistic regression decision boundary</h1>
+<ul>
+<li>Logistic regression classifies new samples based on any threshold you want, so it doesn’t inherently have one <em>decision boundary</em>; here we show a contour plot for a range of threshold values:</li>
+</ul>
+<figure>
+<img src="log-boundary.png" alt="" />
+</figure>
+</section>
+<section id="confusion-matrix" class="slide level2">
+<h1>Confusion matrix</h1>
+<ul>
+<li>A confusion matrix is a (contingency) table that is often used to describe the performance of a classification model, for example:</li>
+</ul>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Types of errors:
+<ul>
+<li><em>False positive rate</em>: The fraction of negative examples that are classified as positive</li>
+<li><em>False negative rate</em>: The fraction of positive examples that are classified as negative</li>
+</ul></li>
+<li>We can change the two error rates by changing the threshold from 0.5 to some other value in [0, 1]</li>
+</ul>
+</section>
+<section id="roc-curve" class="slide level2">
+<h1>ROC curve</h1>
+<ul>
+<li>A <em>receiver operating characteristic (ROC)</em>, or <em>ROC curve</em>, is a graphical plot that illustrates the performance of a binary classifier:</li>
+</ul>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Displays both the false positive and false negative rates</li>
+<li>The ROC curve is traced out as we change the threshold</li>
+<li>Sometimes we use the <em>AUC</em> or <em>area under the curve</em> to summarise the overall performance (higher AUC is good)</li>
+</ul>
+</section>
+<section id="the-problem-of-overfitting" class="slide level2">
+<h1>The problem of overfitting</h1>
+<ul>
+<li>If we have too many features, the learned hypothesis may fit the training data very well but fail to generalize to new examples</li>
+<li>Example: linear regression</li>
+</ul>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /></p>
+</section>
+<section id="an-example-of-overfitting-in-classification" class="slide level2">
+<h1>An example of overfitting in classification</h1>
+<figure>
+<img src="overfit-class.png" alt="" />
+</figure>
+</section>
+<section id="regularisation" class="slide level2">
+<h1>Regularisation</h1>
+<ul>
+<li>Regularization is designed to address the problem of overfitting</li>
+<li>This technique that <em>constrains</em> or <em>regularises</em> the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero</li>
+<li>It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance</li>
+</ul>
+</section>
+<section id="ridge-regression" class="slide level2">
+<h1>Ridge regression</h1>
+<ul>
+<li>The least squares fitting procedure in linear regression estimates the parameters <span class="math inline">\(\Theta\)</span> for <span class="math inline">\(p\)</span> features using the values that minimise:</li>
+</ul>
+<p><span class="math display">\[
+J(\Theta) = \sum_{i=1}^{N} \left( y_i - \hat{y}_i \right)^2 = \sum_{i=1}^{N} \left( y_i - \theta_0 + \sum_{j=1}^{p}{\theta_{j}{x_{ij}}} \right)^2
+\]</span></p>
+<ul>
+<li>In contrast, the ridge regression coefficient estimates are the values that minimize (where <span class="math inline">\(\lambda \geq 0\)</span> is a tuning parameter to be determined separately):</li>
+</ul>
+<p><span class="math display">\[
+J(\Theta) = \sum_{i=1}^{N} \left( y_i - \theta_0 + \sum_{j=1}^{p}{\theta_{j}{x_{ij}}} \right)^2 + \lambda\sum_{j=1}^{p}{\theta_j^2}
+\]</span></p>
+</section>
+<section id="ridge-regression-continued" class="slide level2">
+<h1>Ridge regression: continued</h1>
+<ul>
+<li>As with least squares, ridge regression seeks coefficient estimates that fit the data well, by making the RSS small</li>
+<li>However, the second term in the cost function, <span class="math inline">\(\lambda\sum_j{\theta_{j}^2}\)</span>, called the <em>shrinkage penalty</em>, is small when the <span class="math inline">\(\Theta\)</span> are close to zero, and so it has the effect of shrinking the estimates of <span class="math inline">\(\Theta\)</span> towards zero</li>
+<li>The tuning parameter <span class="math inline">\(\lambda\)</span> serves to control the relative impact of these two terms on the regression coefficient estimates</li>
+<li>The shrinkage penalty sets the budget for how large the coefficient estimates can be; we minimise the RSS subject to <span class="math inline">\(\sum_j{\theta_{j}^2} \leq s\)</span></li>
+<li>Selecting a good value for <span class="math inline">\(\lambda\)</span> is critical; use <em>cross-validation</em></li>
+<li>Regularisation used for both regression and classification</li>
+<li>Feature scaling must be used due to the sum of squared coefficients in the shrinkage term</li>
+</ul>
+</section>
+<section id="regularisation-some-intuition" class="slide level2">
+<h1>Regularisation: some intuition</h1>
+<ul>
+<li>By shrinking some of the coefficient estimates towards zero, we reduce the influence of some of the features on the model, thereby making it less complex; <span class="math inline">\(\lambda\)</span> the model flexibility</li>
+<li>We can use regularisation to smooth the output of our hypothesis function to reduce overfitting</li>
+<li>If <span class="math inline">\(\lambda\)</span> is chosen to be too large, it may smooth out the function too much and cause underfitting</li>
+<li>To help you think about this:
+<ul>
+<li>Imagine you’re performing a least squares fit to some data with sticks of spaghetti; how long you cook the spaghetti for controls how well you can bend it to fit the data!</li>
+<li>If you overcook, you’ll be able to fit every data point, in effect <em>memorising</em> the training data — but the resultant model will not generalise to new data points, and is useless</li>
+</ul></li>
+</ul>
+</section>
+<section id="selecting-lambda-for-ridge-regression" class="slide level2">
+<h1>Selecting <span class="math inline">\(\lambda\)</span> for Ridge Regression</h1>
+<h3 id="a-brief-look-ahead-at-cross-validation-before-we-explore-in-more-depth">(A brief look-ahead at cross-validation, before we explore in more depth)</h3>
+<ul>
+<li>Ridge regression requires a method to determine which of the models under consideration is best</li>
+<li>That is, we require a method selecting a value for the tuning parameter <span class="math inline">\(\lambda\)</span></li>
+<li><em>Cross-validation</em> provides a simple way to tackle this problem. We choose a grid of <span class="math inline">\(\lambda\)</span> values, and compute the cross-validation error rate for each value of <span class="math inline">\(\lambda\)</span></li>
+<li>We then select the tuning parameter value for which the cross-validation error is smallest</li>
+<li>Finally, the model is re-fit using all of the available observations and the selected value of the tuning parameter</li>
+</ul>
+</section>
+<section id="training-error-versus-test-error" class="slide level2">
+<h1>Training error versus test error</h1>
+<ul>
+<li>The <em>test error</em> is the average error that results from using a statistical learning method to predict the response on a new observation, one that was not used in training the method</li>
+<li>In contrast, the <em>training error</em> can be easily calculated by applying the statistical learning method to the observations used in its training</li>
+<li>But the training error rate often is quite different from the test error rate, and in particular the former can <strong>dramatically underestimate</strong> the latter</li>
+</ul>
+</section>
+<section id="training--versus-test-set-performance" class="slide level2">
+<h1>Training- versus Test-Set Performance</h1>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Left: underfitting, right: overfitting</li>
+<li>Optimal model is where the test error is at a minimum</li>
+</ul>
+</section>
+<section id="validation-set-approach-to-estimate-test-error" class="slide level2">
+<h1>Validation set approach to estimate test error</h1>
+<ul>
+<li>Here we randomly divide the available set of samples into two parts: a <em>training set</em> and a <em>validation</em> or <em>hold-out set</em></li>
+<li>The model is fit on the training set, and the fitted model is used to predict the responses for the observations in the validation set</li>
+<li>Validation set error provides an estimate of the test error</li>
+<li>Most common scheme used in HEP, if any is used at all!</li>
+</ul>
+</section>
+<section id="model-selection-and-trainvalidationtest-sets" class="slide level2">
+<h1>Model selection and train/validation/test sets</h1>
+<ul>
+<li>If we perform model selection or tune paramaters such as polynomial degree (for polynomial regression) or the regularisation parameter <span class="math inline">\(\lambda\)</span> using the test set, the error estimate is very likely to be overly optimistic</li>
+<li>To solve this, we can introduce a third set, the <em>cross-validation set</em>, to serve as an intermediate set that we can use to perform tuning and model selection, <em>e.g.</em>:
+<ul>
+<li>Optimise the parameters in <span class="math inline">\(\Theta\)</span> using the training set for each tuning parameter value</li>
+<li>Pick the tuning parameter with the lowest error evaluated on the CV set</li>
+<li>Estimate the generalisation error using the test set</li>
+</ul></li>
+<li>A typical train/CV/test split is 60%/20%/20%</li>
+</ul>
+</section>
+<section id="drawbacks-of-validation-set-approach" class="slide level2">
+<h1>Drawbacks of validation set approach</h1>
+<ul>
+<li>The validation estimate of the test error can be highly variable, depending on precisely which observations are included in the training set and which observations are included in the validation set</li>
+<li>In the validation approach, only a subset of the observations — those that are included in the training set rather than in the validation set — are used to fit the model</li>
+<li>This suggests that the validation set error may tend to <em>overestimate</em> the test error for the model fit on the entire data set</li>
+</ul>
+</section>
+<section id="k-fold-cross-validation" class="slide level2">
+<h1><span class="math inline">\(K\)</span>-fold cross-validation</h1>
+<ul>
+<li>Widely used approach for estimating test error</li>
+<li>Estimates can be used to select best model, and to give an idea of the test error of the final chosen model</li>
+<li>Idea is to randomly divide the data into <span class="math inline">\(K\)</span> equal-sized parts. We leave out part <span class="math inline">\(k\)</span>, fit the model to the other <span class="math inline">\(K − 1\)</span> parts (combined), and then obtain predictions for the left-out <span class="math inline">\(k\)</span>th part</li>
+<li>This is done in turn for each part <span class="math inline">\(k = 1, 2, \dots, K\)</span></li>
+<li>The <span class="math inline">\(k\)</span> results from the folds can then be averaged to produce a single estimation</li>
+<li>The advantage of this method over the simple hold-out method is that all observations are used for both training and validation, and each observation is used for validation exactly once</li>
+<li>Typical values for <span class="math inline">\(K\)</span> are 5 or 10</li>
+</ul>
+</section>
+<section id="k-fold-cross-validation-illustrated" class="slide level2">
+<h1><span class="math inline">\(K\)</span>-fold cross-validation illustrated</h1>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /></p>
+</section>
+<section id="what-to-do-next" class="slide level2">
+<h1>What to do next?</h1>
+<ul>
+<li>What do we do next, after having used cross-validation to choose a value of a tuning parameter (<em>e.g.,</em> <span class="math inline">\(\lambda\)</span>)?</li>
+<li>It may be an obvious point, but worth being clear: we now fit our estimator to the <em>entire</em> training set using the tuning parameter value we obtained</li>
+<li>Deploy model!</li>
+</ul>
+</section>
+<section id="model-selection-versus-model-evaluation" class="slide level2">
+<h1>Model selection versus model evaluation</h1>
+<ul>
+<li>Cross-validation is used for both model selection/tuning and to evaluate the test error of the final chosen model</li>
+<li>Should we use the error obtained on the CV set during model selection/tuning as an estimate of the test error of the final chosen model? No!</li>
+<li>The CV error estimate is likely to be overly optimistic, because we obtained it using the same observations as those used to select/tune the model to optimise performance!</li>
+<li>The solution is to use an <em>outer loop</em> of cross-validation to estimate the performance of the final model</li>
+</ul>
+</section>
+<section id="nested-k-fold-cross-validation-illustrated" class="slide level2">
+<h1>Nested <span class="math inline">\(K\)</span>-fold cross validation illustrated</h1>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /></p>
+</section>
+<section id="nested-cross-validation-some-final-details" class="slide level2">
+<h1>Nested cross validation: some final details</h1>
+<ul>
+<li>If you use cross validation to estimate the hyperparameters of a model and then use those hyperparameters to fit a model to the whole dataset, then that is fine, provided that you recognise that the cross validation estimate of performance is likely to be (possibly substantially) optimistically biased</li>
+<li>This is because part of the model (the hyperparameters) have been selected to optimise the cross validation performance, so if the cross validation statistic has a non-zero variance (and it will) there is the possibility of overfitting the model selection criterion</li>
+<li>If you want to choose the hyperparameters and estimate the performance of the resulting model then you need to perform a nested cross-validation, where the outer cross validation is used to assess the performance of the model, and the inner cross validation is used to determine the hyperparameters</li>
+</ul>
+</section>
+<section id="information-leakage" class="slide level2">
+<h1>Information leakage</h1>
+<ul>
+<li>Information leakage is the creation of unexpected additional information in the training data, allowing a model or machine learning algorithm to make unrealistically good predictions</li>
+<li>Leakage is a pervasive challenge in applied machine learning, causing models to over-represent their generalization error and often rendering them useless in the real world</li>
+<li>Given that methods such as cross validation and other steps to protect against information leakage are largely unknown in the HEP community, it’s reasonable to assume that it occurs in HEP analyses frequently</li>
+</ul>
+</section>
+<section id="information-leakage-examples" class="slide level2">
+<h1>Information leakage examples</h1>
+<ul>
+<li>If you evaluate the performance of your final model using test data, and tune your model to get a better result, you are using the test data for tuning!</li>
+<li>If you apply feature scaling on the whole data set before creating partitions or folds, the means and standard deviations (and any data transformation parameters) have seen the test data!</li>
+<li>If you choose the features for your model before creating partitions or folds, you are using information from the test data, and you get choose uninformative features that are spuriously correlated with the output <span class="math inline">\(\rightarrow\)</span> useless final model!</li>
+<li>If you tune <em>any</em> cuts using the test data, your final model is likely to have overly optimistic performance!
+<ul>
+<li>This is true even if you are using simple one-dimensional rectangular cuts on variables — <em>i.e.</em>, the traditional cut-based method commonly used in HEP!</li>
+</ul></li>
+</ul>
+</section>
+<section id="feature-selection" class="slide level2">
+<h1>Feature selection</h1>
+<h3 id="problems-of-too-many-features">Problems of too many features</h3>
+<ul>
+<li>Correlated features can skew prediction</li>
+<li>Irrelevant features (not correlated to class variable) cause unnecessary blowup of the model space</li>
+<li>Irrelevant features can drown the information provided by informative features in noise</li>
+<li>Irrelevant features in a model reduce its explanatory value (also when predictive accuracy is not reduced)</li>
+<li>Training may be slower and more computationally expensive</li>
+<li>Increased risk of overfitting</li>
+</ul>
+</section>
+<section id="redundant-irrelevant-features" class="slide level2">
+<h1>Redundant &amp; irrelevant features</h1>
+<ul>
+<li>What should we do when it is likely that the data contains many redundant or irrelevant features?</li>
+<li><strong>Redundant features</strong> are those which provide no more information than the currently selected features</li>
+<li><strong>Irrelevant features</strong> provide no useful information in any context</li>
+<li>Various methods exist to remove them:
+<ul>
+<li><em>Wrapper methods</em> consider the selection of a set of features as a search problem, where different combinations are prepared, evaluated and compared to other combinations — typically slow but give good performance</li>
+<li><em>Filter methods</em> apply a statistical measure to assign a scoring to each feature — fast, but consider each feature independently</li>
+<li><em>Embedded methods</em> learn which features best contribute to the accuracy of the model while the model is being created</li>
+</ul></li>
+</ul>
+</section>
+<section id="choosing-a-classifier" class="slide level2">
+<h1>Choosing a classifier</h1>
+<ul>
+<li>We have only considered simple linear models so far</li>
+<li>Linear models are seldom correct, but they can be informative!</li>
+<li>In some cases, the true relationship between the input and output might actually be close to linear — so a more complex model will not increase performance much</li>
+<li>Simple models may do as well as complex models if the features are uniformative</li>
+<li>In any case, your “go-to” algorithm before trying anything else should be a simple linear model; this will give you a baseline with which to compare against</li>
+<li>Boosted decision trees and neural nets are fashionable in HEP nowadays, but in some cases a simple model might get reasonable performance and be more interpretable, and is probably easy to tune and faster to train</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<p>One advantage of crude models is that we know they are crude and will not try to read too much from them. With more sophisticated models,</p>
+<blockquote>
+<p>… there is an awful temptation to squeeze the lemon until it is dry and to present a picture of the future which through its very precision and verisimilitude carries conviction. Yet a man who uses an imaginary map, thinking it is a true one, is like to be worse off than someone with no map at all; for he will fail to inquire whenever he can, to observe every detail on his way, and to search continuously with all his senses and all his intelligence for indications of where he should go.</p>
+</blockquote>
+<p>From <em>Small is Beautiful</em> by E. F. Schumacher</p>
+</section>
+<section class="slide level2">
+
+</section>
+<section><section id="thats-probably-enough-theory-for-now" class="titleslide slide level1"><h1>That’s probably enough theory for now!</h1></section><section class="slide level2">
+
+</section></section>
+    </div>
+  </div>
+
+  <script src="libs/reveal.js-3.3.0/lib/js/head.min.js"></script>
+  <script src="libs/reveal.js-3.3.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: true,
+        // Transition style
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "libs/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>
