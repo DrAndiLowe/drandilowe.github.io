@@ -78,6 +78,9 @@ PROFESSIONAL CERTIFICATES
 • AWS Certified AI Practitioner, Amazon Web Services (AWS), issued Nov. 2024. 
 Foundations of artificial intelligence (AI), ML, generative AI, large language models (LLMs), prompt engineering, and AWS managed AI/ML services (e.g., Bedrock, Amazon Q, SageMaker, etc.).
 
+• Salesforce Certified AI Associate, Salesforce, issued Jan. 2025.
+AI foundations, AI capabilities in customer relationship management (CRM), ethical considerations of AI
+
 
 COMPUTING SKILLS
 
