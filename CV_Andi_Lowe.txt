@@ -78,9 +78,9 @@ AI foundations, AI capabilities in customer relationship management (CRM), ethic
 COMPUTING SKILLS
 
 • Programming languages: Python (NumPy, Pandas, Scikit-Learn, Matplotlib, etc.), R, C++, Bash, SQL, Octave 
-• Data mining software: KNIME, Weka, XGBoost, H2O, caret, ROOT 
+• Data mining software: AWS Sagemaker, KNIME, Weka, XGBoost, H2O, caret, ROOT 
 • Data visualisation: ggplot2, Plotly, TIBCO Spotfire, Tableau, Flexdashboard 
 • Notebooks/Documentation: Jupyter, Google Colab, R Markdown, LaTeX, Confluence 
 • Software development: Docker, Git/GitHub/GitLab, Jira, RStudio, UML, Valgrind, Visual Studio Code 
-• Operating systems: Unix, Linux, Microsoft Windows 
+• Operating systems: Unix, Linux, Microsoft Windows, macOS 
 • Other: object-oriented analysis and design, CPU and time profiling, code optimisation, memory debugging. 
