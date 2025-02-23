@@ -15,19 +15,27 @@ EMPLOYMENT
 Data Scientist EPAM Systems Inc., Hungary 
 Worked directly and collaboratively with business clients on a range of consulting projects, including:
 
-• Texas Instruments 
+• Verizon Connect
+
+Developed machine learning models for predictive maintenance of GPS fleet tracking devices using AWS Sagemaker, Python, SQL, and AWS Redshift to identify non-reporting units.
+
+• Texas Instruments
+
 Helped develop a proof of concept for remote sensing using millimetre-wave radar technology. Performed analysis and image processing with OpenCV to support project decision-making.
 
-• Child Mind Institute 
-Engineered a ML algorithm in Python with Scikit-Learn to detect and monitor body-focused repetitive behaviours such as hair-pulling (trichotillomania), skin-picking (excoriation), and nail biting (onychophagia), which can be physically dangerous, leading to hair loss, skin infections, and scarring. Contributed to the development of a wrist-worn monitoring device that enables healthcare professionals to effectively track treatment outcomes. Oversaw data collection methods and hardware choices. Proactively identified potential risks and issues beyond the data science scope, ensuring seamless project execution through effective communication with team members.
+• Child Mind Institute
 
-• Merck Sharp & Dohme 
-Defined optimal features for an email marketing campaign using insights from the analysis of data captured with neuromarketing software.
+Engineered a ML algorithm in Python with Scikit-Learn to detect and monitor harmful body-focused repetitive behaviours such as hair-pulling, skin-picking, and nail biting. Contributed to the development of a wrist-worn monitoring device that enables healthcare professionals to effectively track treatment outcomes. Oversaw data collection methods and hardware choices. Proactively identified potential risks and issues beyond the data science scope, ensuring seamless project execution through effective communication with team members.
 
-• London Stock Exchange Group 
-Devised, developed, and maintained software in R and Python to anonymise Personal Identifiable Information (PII) data, aligning with EU GDPR data protection and privacy laws. This initiative safeguarded a critical $250 million per annum revenue stream for the client. The cloud-hosted and dockerised software analyses the data and uses ML to generate a synthetic dataset that is structurally and statistically analogous but with robust privacy protections for use in non-production environments. Instituted best practice guidelines to aid the client in meeting GDPR commitments. Provided practical guidance that is backed by science on digital carbon footprint mitigation.
+• Merck Sharp & Dohme
 
-• Bayer AG 
+Identified key features for an email marketing campaign by analysing neuromarketing data in Python.
+
+• London Stock Exchange Group
+
+Devised, developed, and maintained software in R and Python to anonymise Personal Identifiable Information (PII) data, aligning with EU GDPR data protection and privacy laws. This initiative safeguarded a critical $250 million per annum revenue stream for the client. The cloud-hosted and dockerised software uses ML to generate a synthetic dataset with robust privacy protections for use in non-production environments. Instituted best practice guidelines to aid the client in meeting GDPR commitments. Provided practical guidance, backed by science, on digital carbon footprint mitigation.
+
+• Bayer AG
 Built extract, transform, and load (ETL) processes using KNIME for automated Excel financial report generation. Reduced report generation time from over 24 hours to under 2 hours.
 
 2013–2017  
