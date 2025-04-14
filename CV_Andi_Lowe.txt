@@ -1,94 +1,95 @@
-﻿Dr Andi Lowe 
+Dr Andi Lowe  
+Data Scientist · PhD in Particle Physics · Ex-CERN  
+Email: dr.andi.lowe@gmail.com · LinkedIn: linkedin.com/in/drandilowe · Relocating to Ireland in spring 2025  
 
-Data Scientist · PhD in Particle Physics · Ex-CERN
-Email: dr.andi.lowe@gmail.com · LinkedIn: linkedin.com/in/drandilowe · Relocating to Ireland in spring 2025
+PROFESSIONAL PROFILE  
 
+British data scientist with eight years of experience consulting for a diverse range of business clients and a 15-year background in data-driven scientific research within large international teams. Holds a PhD in particle physics, spent several years at CERN in Geneva, Switzerland, and was part of the team that discovered the Higgs boson. Co-recipient of the 2025 Breakthrough Prize in Fundamental Physics, awarded for ground-breaking measurements of Higgs boson properties and exploration of nature at the shortest distances and most extreme conditions. Expertise includes statistical data analysis, machine learning (ML), software development, mathematical modelling, data visualisation, and results interpretation. Co-author of over 500 peer-reviewed scientific publications and has presented at numerous international workshops and conferences.  
 
-PROFESSIONAL PROFILE
+EMPLOYMENT  
 
-I am a British data scientist with 8 years of experience consulting for a diverse range of business clients and a 15-year background in data-oriented scientific research within large international teams. I have a PhD in particle physics, spent several years based at CERN in Geneva, Switzerland, and was a member of the team that discovered the Higgs boson. My core competencies include statistical data analysis, machine learning (ML), software development, mathematical modelling, data visualisation and interpretation of results. I am a co-author of over 500 peer-reviewed scientific publications and have spoken at numerous international workshops and conferences. 
+2017–present  
+Data Scientist  
+EPAM Systems Inc., Hungary  
 
+Collaborated directly with business clients on diverse consulting projects, including:  
 
-EMPLOYMENT
+* Verizon Connect  
+  Developed machine learning models for predictive maintenance of GPS fleet tracking devices using AWS Sagemaker, Python, SQL, and AWS Redshift to identify faulty units.  
 
-2017–present 
-Data Scientist EPAM Systems Inc., Hungary 
-Worked directly and collaboratively with business clients on a range of consulting projects, including:
+* Texas Instruments  
+  Developed a proof of concept for remote sensing using millimetre-wave radar technology. Conducted analysis and image processing with OpenCV to support project decision-making.  
 
-• Verizon Connect
+* Child Mind Institute  
+  Designed a ML algorithm in Python with Scikit-Learn to detect and monitor harmful body-focused repetitive behaviours, such as hair-pulling, skin-picking, and nail biting. Contributed to the development of a wrist-worn monitoring device to help healthcare professionals track treatment outcomes. Oversaw data collection methods and hardware selection, while identifying and mitigating project risks through effective team communication.  
 
-Developed machine learning models for predictive maintenance of GPS fleet tracking devices using AWS Sagemaker, Python, SQL, and AWS Redshift to identify non-reporting units.
+* Merck Sharp & Dohme  
+  Analysed neuromarketing data in Python to identify key features for an email marketing campaign.  
 
-• Texas Instruments
+* London Stock Exchange Group  
+  Developed and maintained software in R and Python to anonymise Personal Identifiable Information (PII) data, ensuring compliance with EU GDPR data protection laws. This safeguarded a critical $250 million annual revenue stream. The cloud-hosted, dockerised software uses ML to generate synthetic datasets with robust privacy protections for non-production environments. Established best practices for GDPR compliance and provided science-backed guidance on reducing the client’s digital carbon footprint.  
 
-Helped develop a proof of concept for remote sensing using millimetre-wave radar technology. Performed analysis and image processing with OpenCV to support project decision-making.
-
-• Child Mind Institute
-
-Engineered a ML algorithm in Python with Scikit-Learn to detect and monitor harmful body-focused repetitive behaviours such as hair-pulling, skin-picking, and nail biting. Contributed to the development of a wrist-worn monitoring device that enables healthcare professionals to effectively track treatment outcomes. Oversaw data collection methods and hardware choices. Proactively identified potential risks and issues beyond the data science scope, ensuring seamless project execution through effective communication with team members.
-
-• Merck Sharp & Dohme
-
-Identified key features for an email marketing campaign by analysing neuromarketing data in Python.
-
-• London Stock Exchange Group
-
-Devised, developed, and maintained software in R and Python to anonymise Personal Identifiable Information (PII) data, aligning with EU GDPR data protection and privacy laws. This initiative safeguarded a critical $250 million per annum revenue stream for the client. The cloud-hosted and dockerised software uses ML to generate a synthetic dataset with robust privacy protections for use in non-production environments. Instituted best practice guidelines to aid the client in meeting GDPR commitments. Provided practical guidance, backed by science, on digital carbon footprint mitigation.
-
-• Bayer AG
-Built extract, transform, and load (ETL) processes using KNIME for automated Excel financial report generation. Reduced report generation time from over 24 hours to under 2 hours.
+* Bayer AG  
+  Built extract, transform, and load (ETL) processes using KNIME to automate Excel financial report generation, reducing processing time from over 24 hours to under 2 hours.  
 
 2013–2017  
-Research Fellow Wigner Research Centre for Physics, Hungarian Academy of Sciences, Hungary 
-Performed data analysis in R and C++ for the ALICE experiment at CERN, which recreates conditions that are believed to have existed a fraction of a second after the Big Bang. Used ML to develop classification algorithms for recognising particles based on their decay properties. Engaged with the data science community via public outreach talks and conference presentations. 
+Research Fellow  
+Wigner Research Centre for Physics, Hungarian Academy of Sciences, Hungary  
+
+Conducted data analysis in R and C++ for the ALICE experiment at CERN, recreating conditions believed to have existed shortly after the Big Bang. Developed ML classification algorithms to identify particles based on their decay properties. Engaged with the data science community through public outreach talks and conference presentations.  
 
 2010–2012  
-Postdoctoral Fellow, Deputy Team Leader California State University, Fresno, USA (based at CERN) 
-Systematically investigated the potential benefit of hundreds of different predictor variables for a range of data-mining analyses using Monte Carlo simulations written in C++. Engineered features that improve search sensitivity for new particles, thereby reducing the necessary time and cost of experimental data collection required for discoveries. 
+Postdoctoral Fellow, Deputy Team Leader  
+California State University, Fresno, USA (based at CERN)  
+
+Investigated the utility of hundreds of predictor variables for data-mining analyses using Monte Carlo simulations in C++. Engineered features to improve search sensitivity for new particles, reducing the time and cost of experimental data collection.  
 
 2008–2009  
-Postdoctoral Fellow Indiana University, USA (based at CERN) 
-Developed an algorithm in C++ and Python for real-time particle identification in streaming data that has an input rate of 1 GB/s. Optimised algorithm parameters and achieved excellent performance. This algorithm underpins a large part of the ATLAS experiment’s physics programme by supplying data for numerous analyses. It has been used in production for data-taking since 2010 and has processed tens of petabytes of data, supporting the analysis work of approximately 3000 physicists.
+Postdoctoral Fellow  
+Indiana University, USA (based at CERN)  
 
+Developed an algorithm in C++ and Python for real-time particle identification in streaming data at 1 GB/s. Optimised parameters to achieve high performance. This algorithm has been in production since 2010, processing tens of petabytes of data and supporting the ATLAS experiment’s physics programme.  
 
-EDUCATION
+EDUCATION  
 
-PhD Particle Physics Royal Holloway, University of London, UK (including 1.5 years at CERN) 
-Played a key role in the development of the core software and algorithms written in C++ for a real-time multi-stage cascade classifier that filters and reduces the collision event data rate from 60 TB/s to a manageable 300 MB/s which can be written to permanent storage. Performed detailed time profiling of the core software and devised improvements that made it 8 times faster, thus meeting a critical requirement of the system. Ran analyses on petabyte-scale datasets using a distributed computing system. Wrote software that was used in the discovery of the Higgs boson. 
+PhD Particle Physics  
+Royal Holloway, University of London, UK (including 1.5 years at CERN)  
 
-MSc Particle Physics Royal Holloway, University of London, UK 
-Investigated the search potential for the Higgs boson using the H → bb decay channel with the ATLAS detector at CERN. This was the first data-mining analysis of this type to be performed entirely in C++, setting a benchmark for other researchers in the field. 
+Contributed to the development of core software and algorithms in C++ for a real-time multi-stage cascade classifier, reducing collision event data rates from 60 TB/s to 300 MB/s for permanent storage. Conducted detailed time profiling and implemented optimisations that improved software performance by a factor of eight, meeting critical system requirements. Analysed petabyte-scale datasets using distributed computing systems. Developed software used in the discovery of the Higgs boson.  
 
-BSc (Hons) Physics Royal Holloway, University of London, UK 
+MSc Particle Physics  
+Royal Holloway, University of London, UK  
 
+Investigated the search potential for the Higgs boson via the H → bb decay channel using the ATLAS detector at CERN. Conducted the first data-mining analysis of this type entirely in C++, setting a benchmark for subsequent research in the field.  
 
-TRANSFERABLE SKILLS
+BSc (Hons) Physics  
+Royal Holloway, University of London, UK  
 
-• Communication: 
-Excel in working closely with clients as a consultant, communicating effectively with other departments and business stakeholders to discuss complex data-driven findings and technical specifications. Proficient in translating client requirements into detailed project documentation. Invited speaker at numerous international conferences. Adept at visual storytelling and data visualisation best practices. Highly skilled at demystifying complex technical concepts for varied audiences. Consistently praised for building strong client relationships. 
+TRANSFERABLE SKILLS  
 
-• Problem solving: 
-Capacity to lead independent research, dissect complex problems, and devise innovative and effective solutions. 
+* Communication  
+  Skilled at collaborating with clients as a consultant and effectively communicating with business stakeholders and technical teams to convey complex data-driven insights and technical specifications. Proficient in translating client requirements into detailed project documentation. Invited speaker at numerous international conferences. Experienced in visual storytelling and data visualisation best practices. Adept at simplifying complex technical concepts for diverse audiences. Recognised for building strong client relationships.  
 
-• Project management: 
-Proficient in managing parallel projects under tight deadlines, both onsite and remotely. Conversant with Agile and Waterfall software development methodologies. Experienced in leading project meetings. 
+* Problem solving  
+  Proven ability to lead independent research, analyse complex problems, and develop innovative, effective solutions.  
 
+* Project management  
+  Experienced in managing multiple projects under strict deadlines, both onsite and remotely. Familiar with Agile and Waterfall software development methodologies. Skilled in leading project meetings and mentoring team members.  
 
-PROFESSIONAL CERTIFICATES
+PROFESSIONAL CERTIFICATES  
 
-• AWS Certified AI Practitioner, Amazon Web Services (AWS), issued Nov. 2024. 
-Foundations of artificial intelligence (AI), ML, generative AI, large language models (LLMs), prompt engineering, and AWS managed AI/ML services (e.g., Bedrock, Amazon Q, SageMaker, etc.).
+* AWS Certified AI Practitioner, Amazon Web Services (AWS), issued Nov. 2024  
+  Foundations of artificial intelligence (AI), ML, generative AI, large language models (LLMs), prompt engineering, and AWS managed AI/ML services (e.g., Bedrock, Amazon Q, SageMaker, etc.).  
 
-• Salesforce Certified AI Associate, Salesforce, issued Jan. 2025.
-AI foundations, AI capabilities in customer relationship management (CRM), ethical considerations of AI
+* Salesforce Certified AI Associate, Salesforce, issued Jan. 2025  
+  AI foundations, AI capabilities in customer relationship management (CRM), ethical considerations of AI  
 
+COMPUTING SKILLS  
 
-COMPUTING SKILLS
-
-• Programming languages: Python (NumPy, Pandas, Scikit-Learn, Matplotlib, etc.), R, C++, Bash, SQL, Octave 
-• Data mining software: AWS Sagemaker, KNIME, Weka, XGBoost, H2O, caret, ROOT 
-• Data visualisation: ggplot2, Plotly, TIBCO Spotfire, Tableau, Flexdashboard 
-• Notebooks/Documentation: Jupyter, Google Colab, R Markdown, LaTeX, Confluence 
-• Software development: Docker, Git/GitHub/GitLab, Jira, RStudio, UML, Valgrind, Visual Studio Code 
-• Operating systems: Unix, Linux, Microsoft Windows, macOS 
-• Other: object-oriented analysis and design, CPU and time profiling, code optimisation, memory debugging. 
+* Programming languages: Python (NumPy, Pandas, Scikit-Learn, Matplotlib, etc.), R, C++, Bash, SQL, Octave  
+* Data mining software: AWS Sagemaker, KNIME, Weka, XGBoost, H2O, caret, ROOT  
+* Data visualisation: ggplot2, Plotly, TIBCO Spotfire, Tableau, Flexdashboard  
+* Notebooks/Documentation: Jupyter, Google Colab, R Markdown, LaTeX, Confluence  
+* Software development: Docker, Git/GitHub/GitLab, Jira, RStudio, UML, Valgrind, Visual Studio Code  
+* Operating systems: Unix, Linux, Microsoft Windows, macOS  
+* Other: object-oriented analysis and design, CPU and time profiling, code optimisation, memory debugging  
