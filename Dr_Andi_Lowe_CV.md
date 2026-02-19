@@ -11,7 +11,7 @@
 
 - Background in Python and R development, performance optimisation, and algorithmic problem-solving, with experience spanning high-performance computing, statistical modelling, and applied machine learning. Strong focus on data quality assessment, feature engineering, and rigorous model validation.
 
-- PhD-qualified with extensive experience in ultra low-latency, high-throughput inference pipelines and managing massive real-time data streams (*i.e.*, "Big Fast Data").
+- PhD-qualified with extensive experience in low-latency, high-throughput inference pipelines and managing massive real-time data streams (*i.e.*, "Big Fast Data").
 
 - Proven consultant and stakeholder manager, adept at translating complex analytical results into clear, actionable insights for senior business stakeholders across diverse domains.
 
